@@ -206,15 +206,19 @@ var displayShapes = function() {
 
   for (var i = 0; i < objectCount-1; i++){
     // ADDED Step 2-a
-    if (visualVariable === "Parallelism"){
+    if (visualVariable == "Parallelism"){
       if(targetP === parallel) {
         objectsAppearance.push({
-          angel: parallel,
+          targetAngel: parallel,
+          angel: nonParallel,
+          targetDirection: targetD, // constant
           direction: targetD // constant
         });
       } else {
         objectsAppearance.push({
-          angel: nonParallel,
+          targetAngel: nonParallel,
+          angel: parallel,
+          targetDirection: targetD, // constant
           direction: targetD // constant
         });
       }
@@ -223,13 +227,17 @@ var displayShapes = function() {
     else if (visualVariable == "Direction"){
       if(targetD === directionBase) {
         objectsAppearance.push({
+          targetAngel: targetP, //constant
           angel: targetP, // constant
-          direction: directionBase
+          targetDirection: directionBase,
+          direction: directionRotate
         });
       } else {
         objectsAppearance.push({
+          targetAngel: targetP, //constant
           angel: targetP, // constant
-          direction: directionRotate
+          targetDirection: directionRotate,
+          direction: directionBase
         });
       }
     }
@@ -403,6 +411,26 @@ var displayShapes = function() {
     if (i == ctx.targetIndex){
       var groupObject = group.append("g")
       .attr("target",true)
+      .attr("transform","rotate(" + objectsAppearance[i].targetDirection + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
+      
+      groupObject.append("rect")
+      .attr("class","left")
+      .attr("x",gridCoords[i].x-lineMargin)
+      .attr("y",gridCoords[i].y-adjust)
+      .attr("width",lineWidth)
+      .attr("height",lineHeight)
+      .attr("transform","rotate(" + convertSign(objectsAppearance[i].targetAngel) + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
+      groupObject.append("rect")
+      .attr("class","right")
+      .attr("x",gridCoords[i].x+lineMargin)
+      .attr("y",gridCoords[i].y-adjust)
+      .attr("width",lineWidth)
+      .attr("height",lineHeight)
+      .attr("transform","rotate(" + objectsAppearance[i].targetAngel + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
+    }
+    else{
+      var groupObject = group.append("g")
+      .attr("target",false)
       .attr("transform","rotate(" + objectsAppearance[i].direction + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
       
       groupObject.append("rect")
@@ -419,32 +447,6 @@ var displayShapes = function() {
       .attr("width",lineWidth)
       .attr("height",lineHeight)
       .attr("transform","rotate(" + objectsAppearance[i].angel + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
-    }
-    else{
-      var angelOther;
-      if(objectsAppearance[i].angel == parallel){
-        angelOther = nonParallel;
-      } else {
-        angleOther = parallel;
-      };
-      var groupObject = group.append("g")
-      .attr("target",false)
-      .attr("transform","rotate(" + objectsAppearance[i].direction + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
-      
-      groupObject.append("rect")
-      .attr("class","left")
-      .attr("x",gridCoords[i].x-lineMargin)
-      .attr("y",gridCoords[i].y-adjust)
-      .attr("width",lineWidth)
-      .attr("height",lineHeight)
-      .attr("transform","rotate(" + convertSign(angelOther) + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
-      groupObject.append("rect")
-      .attr("class","right")
-      .attr("x",gridCoords[i].x+lineMargin)
-      .attr("y",gridCoords[i].y-adjust)
-      .attr("width",lineWidth)
-      .attr("height",lineHeight)
-      .attr("transform","rotate(" + angelOther + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
     }
   }
   ctx.startTime = Date.now();
