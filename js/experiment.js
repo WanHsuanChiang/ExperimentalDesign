@@ -373,12 +373,27 @@ var displayShapes = function() {
   // display all objects by adding actual SVG shapes
   for (var i = 0; i < objectCount; i++) {
     if (i == ctx.targetIndex){
+      /*
       group.append("circle")
       .attr("cx", gridCoords[i].x)
       .attr("cy", gridCoords[i].y)
       .attr("r", objectsAppearance[i].size)
       .attr("fill", objectsAppearance[i].color)
       .attr("target", true);
+      */     
+      var groupObject = group.append("g").attr("clip-path","url(#SVGID_6_)");
+      groupObject.append("rect")
+      .attr("x",26.999)
+      .attr("y",22)
+      .attr("transform","matrix(0.9848 -0.1737 0.1737 0.9848 -8.227 5.9693)")
+      .attr("width",6)
+      .attr("height",56);
+      groupObject.append("rect")
+      .attr("x",67)
+      .attr("y",22)
+      .attr("transform","matrix(0.9848 -0.1737 0.1737 0.9848 -8.227 5.9693)")
+      .attr("width",6)
+      .attr("height",56);
     }
     else{
       group.append("circle")
