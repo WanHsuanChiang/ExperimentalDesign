@@ -210,11 +210,11 @@ var displayShapes = function() {
   // Here, we implement the case VV = "Size" so all other objects are large (resp. small) if target is small (resp. large) but have the same color as target.
   var objectsAppearance = [];
 
-  for (var i = 0; i < objectCount-1; i++){
-    // ADDED Step 2-a
-    if (visualVariable == "Parallelism"){      
-      if(targetP === parallel) {
-        // if target object is parallel, then others are...
+  // VV = Parallelism
+  if(visualVariable == "Parallelism"){
+    for (var i = 0; i < objectCount-1; i++){
+      if(targetP === parallel) {        
+        // if target object is parallel, then others are...        
         objectsAppearance.push({
           angel: nonParallel,
           direction: targetD // constant
@@ -227,8 +227,10 @@ var displayShapes = function() {
         });
       }
     }
-    // ADDED Step 2-b
-    else if (visualVariable == "Direction"){
+  } 
+  // VV = Direction
+  else if (visualVariable == "Direction") {
+    for (var i = 0; i < objectCount-1; i++){
       if(targetD === directionBase) {
         // if target object apply to directionBase, then others are...
         objectsAppearance.push({
@@ -242,156 +244,42 @@ var displayShapes = function() {
           direction: directionBase
         });
       }
-    }
-    // ADDED Step 2-c
-    else{
-      if (targetP == parallel && targetD == directionBase){
-        if (objectCount == 9){
-          for (var j = 0; j < 3; j++){
-            objectsAppearance.push({
-              angel: parallel,
-              direction: directionRotate
-            });
-            objectsAppearance.push({
-              angel: nonParallel,
-              direction: directionBase
-            });
-          }
-          for (var j = 0; j < 2; j++){
-            objectsAppearance.push({
-              angel: nonParallel,
-              direction: directionRotate
-            });
-          }
-        }
-        else{
-          for (var j = 0; j < (objectCount - 1) / 3; j++){
-            objectsAppearance.push({
-              angel: parallel,
-              direction: directionRotate
-            });
-            objectsAppearance.push({
-              angel: nonParallel,
-              direction: directionBase
-            });
-            objectsAppearance.push({
-              angel: nonParallel,
-              direction: directionRotate
-            });
-          }
-        }
-      }
-      else if (targetP == parallel && targetD == directionRotate){
-        if (objectCount == 9){
-          for (var j = 0; j < 3; j++){
-            objectsAppearance.push({
-              angel: parallel,
-              direction: directionBase
-            });
-            objectsAppearance.push({
-              angel: nonParallel,
-              direction: directionRotate
-            });
-          }
-          for (var j = 0; j < 2; j++){
-            objectsAppearance.push({
-              angel: nonParallel,
-              direction: directionBase
-            });
-          }
-        }
-        else{
-          for (var j = 0; j < (objectCount - 1) / 3; j++){
-            objectsAppearance.push({
-              angel: parallel,
-              direction: directionBase
-            });
-            objectsAppearance.push({
-              angel: nonParallel,
-              direction: directionRotate
-            });
-            objectsAppearance.push({
-              angel: nonParallel,
-              direction: directionBase
-            });
-          }
-        }
-      }
-      else if (targetP == 15 && targetD == directionBase){
-        if (objectCount == 9){
-          for (var j = 0; j < 3; j++){
-            objectsAppearance.push({
-              angel: nonParallel,
-              direction: directionRotate
-            });
-            objectsAppearance.push({
-              angel: parallel,
-              direction: directionRotate
-            });
-          }
-          for (var j = 0; j < 2; j++){
-            objectsAppearance.push({
-              angel: parallel,
-              direction: directionBase
-            });
-          }
-        }
-        else{
-          for (var j = 0; j < (objectCount - 1) / 3; j++){
-            objectsAppearance.push({
-              angel: nonParallel,
-              direction: directionRotate
-            });
-            objectsAppearance.push({
-              angel: parallel,
-              direction: directionRotate
-            });
-            objectsAppearance.push({
-              angel: parallel,
-              direction: directionBase
-            });
-          }
-        }
-      }
-      else{
-        if (objectCount == 9){
-          for (var j = 0; j < 3; j++){
-            objectsAppearance.push({
-              angel: parallel,
-              direction: directionRotate
-            });
-            objectsAppearance.push({
-              angel: parallel,
-              direction: directionBase
-            });
-          }
-          for (var j = 0; j < 2; j++){
-            objectsAppearance.push({
-              angel: nonParallel,
-              direction: directionBase
-            });
-          }
-        }
-        else{
-          for (var j = 0; j < (objectCount - 1) / 3; j++){
-            objectsAppearance.push({
-              angel: parallel,
-              direction: directionRotate
-            });
-            objectsAppearance.push({
-              angel: parallel,
-              direction: directionBase
-            });
-            objectsAppearance.push({
-              angel: nonParallel,
-              direction: directionBase
-            });
-          }
-        }
-      }
-    }
+    }    
   }
-  
+  // VV = ParallelismDirection (Combination)
+  else { 
+    
+    var list = [
+      [parallel,directionBase],
+      [parallel,directionRotate],
+      [nonParallel,directionBase],
+      [nonParallel,directionRotate]
+    ];
+    // remove target combination in the list
+    for(var j = 0; j < list.length; j++){
+      if( list[j] === [targetP,targetD]){
+        list.splice(j,1);
+      }
+    }
+    // allocate the rest of the object appearance
+    let canAllocate = (objectCount-1)-2*3;
+    let a1 = getRandomInt(0,canAllocate+1);
+    let a2 = getRandomInt(0,canAllocate-a1+1);
+    let a3 = canAllocate-a1-a2;
+    var subCount = [ a1+2 , a2+2 , a3+2 ];
+    shuffle(subCount);
+    // push inside the array
+    // for each combination
+    for(var k = 0; k < list.length; k++){
+      // the combination and the subCount match in terms of the same index (order) in their own array
+      for(var i = 0; i < subCount[k]; i++){
+        objectsAppearance.push({
+          angle: list[k][0],
+          direction: list[k][1]
+        });
+      }
+    }
+  }  
 
   // 3. Shuffle the list of objects (useful when there are variations regarding both visual variable) and add the target at a specific index
   shuffle(objectsAppearance);
