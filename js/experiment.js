@@ -176,12 +176,14 @@ var displayShapes = function() {
   // In my example, it means deciding on its size (large or small) and its color (light or dark)
   var randomNumber1 = Math.random();
   var randomNumber2 = Math.random();
-  //var targetParallelism, targetDirection
+  
   var parallel = 0;
   var nonParallel = 10;
   //var directionBase = getRandomInt(0,360);
   var directionBase = 0;
   var directionRotate = directionBase + 45;
+  //var targetParallelism, targetDirection
+  //Define the value
   var targetP, targetD; 
   if(randomNumber1 > 0.5) {
     targetP = parallel; // target is parallel
@@ -401,7 +403,7 @@ var displayShapes = function() {
     if (i == ctx.targetIndex){
       var groupObject = group.append("g")
       .attr("target",true)
-      //.attr("transform","rotate(" + objectsAppearance[i].direction + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
+      .attr("transform","rotate(" + objectsAppearance[i].direction + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
       
       groupObject.append("rect")
       .attr("class","left")
@@ -419,9 +421,15 @@ var displayShapes = function() {
       .attr("transform","rotate(" + objectsAppearance[i].angel + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
     }
     else{
+      var angelOther;
+      if(objectsAppearance[i].angel == parallel){
+        angelOther = nonParallel;
+      } else {
+        angleOther = parallel;
+      };
       var groupObject = group.append("g")
       .attr("target",false)
-      .attr("transform","rotate(" + objectsAppearance[i].direction + ")");
+      .attr("transform","rotate(" + objectsAppearance[i].direction + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
       
       groupObject.append("rect")
       .attr("class","left")
@@ -429,14 +437,14 @@ var displayShapes = function() {
       .attr("y",gridCoords[i].y-adjust)
       .attr("width",lineWidth)
       .attr("height",lineHeight)
-      .attr("transform","rotate(" + convertSign(objectsAppearance[i].angel) + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
+      .attr("transform","rotate(" + convertSign(angelOther) + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
       groupObject.append("rect")
       .attr("class","right")
       .attr("x",gridCoords[i].x+lineMargin)
       .attr("y",gridCoords[i].y-adjust)
       .attr("width",lineWidth)
       .attr("height",lineHeight)
-      .attr("transform","rotate(" + objectsAppearance[i].angel + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
+      .attr("transform","rotate(" + angelOther + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
     }
   }
   ctx.startTime = Date.now();
