@@ -380,8 +380,9 @@ var displayShapes = function() {
       .attr("r", objectsAppearance[i].size)
       .attr("fill", objectsAppearance[i].color)
       .attr("target", true);
-      */     
+      */
       var groupObject = group.append("g").attr("clip-path","url(#SVGID_6_)");
+      /*
       groupObject.append("rect")
       .attr("x",26.999)
       .attr("y",22)
@@ -391,9 +392,20 @@ var displayShapes = function() {
       groupObject.append("rect")
       .attr("x",67)
       .attr("y",22)
-      .attr("transform","matrix(0.9848 -0.1737 0.1737 0.9848 -8.227 5.9693)")
-      .attr("width",6)
-      .attr("height",56);
+      .attr("transform","matrix(0.9848 0.1737 -0.1737 0.9848 9.7481 -11.3979)")
+      .attr("width",5.999)
+      .attr("height",55.999);
+      */
+     groupObject.append("rect")
+     .attr("x",gridCoords[i].x-10)
+     .attr("y",gridCoords[i].y-14)
+     .attr("width",3)
+     .attr("height",28);
+     groupObject.append("rect")
+     .attr("x",gridCoords[i].x+10)
+     .attr("y",gridCoords[i].y-14)
+     .attr("width",3)
+     .attr("height",28);
     }
     else{
       group.append("circle")
