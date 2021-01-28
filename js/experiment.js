@@ -129,13 +129,20 @@ var displayInstructions = function() {
     .append("p")
     .html("Multiple shapes will get displayed.<br> Only <b>one shape</b> is different from all other shapes.");
 
-  d3.select("#instructions")
-    .append("p")
-    .html("1. Spot it as fast as possible and press <code>Space</code> bar;");
+  // order list start
+  var steps = [
+    "Spot it as fast as possible and press <code>Space</code> bar;",
+    "Click on the placeholder over that shape."
+  ];
 
-  d3.select("#instructions")
-    .append("p")
-    .html("2. Click on the placeholder over that shape.");
+  var ol = d3.select("#instructions")
+  .append("div")
+  .append("ol");
+
+  for (var i = 0; i < steps.length; i++){
+    ol.append("li").html(steps[i]);
+  }
+  // order list end
 
   d3.select("#instructions")
     .append("p")
@@ -180,7 +187,6 @@ var displayShapes = function() {
   var parallel = 0;
   var nonParallel = 10;
   var directionBase = getRandomInt(0,360);
-  //var directionBase = 0;
   var directionRotate = directionBase + 45;
   //var targetParallelism, targetDirection
   //Define the value
@@ -424,51 +430,6 @@ var displayShapes = function() {
     .attr("height",lineHeight)
     .attr("transform","rotate(" + objectsAppearance[i].angel + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
 
-
-
-    /*
-    if (i == ctx.targetIndex){
-      var groupObject = group.append("g")
-      .attr("target",true)
-      .attr("transform","rotate(" + 0 + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
-      
-      console.log(objectsAppearance[i].targetDirection);
-      groupObject.append("rect")
-      .attr("class","left")
-      .attr("x",gridCoords[i].x-lineMargin)
-      .attr("y",gridCoords[i].y-adjust)
-      .attr("width",lineWidth)
-      .attr("height",lineHeight)
-      .attr("transform","rotate(" + convertSign(objectsAppearance[i].targetAngel) + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
-      groupObject.append("rect")
-      .attr("class","right")
-      .attr("x",gridCoords[i].x+lineMargin)
-      .attr("y",gridCoords[i].y-adjust)
-      .attr("width",lineWidth)
-      .attr("height",lineHeight)
-      .attr("transform","rotate(" + objectsAppearance[i].targetAngel + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
-    }
-    else{
-      var groupObject = group.append("g")
-      .attr("target",false)
-      .attr("transform","rotate(" + 45 + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
-      
-      groupObject.append("rect")
-      .attr("class","left")
-      .attr("x",gridCoords[i].x-lineMargin)
-      .attr("y",gridCoords[i].y-adjust)
-      .attr("width",lineWidth)
-      .attr("height",lineHeight)
-      .attr("transform","rotate(" + convertSign(objectsAppearance[i].angel) + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
-      groupObject.append("rect")
-      .attr("class","right")
-      .attr("x",gridCoords[i].x+lineMargin)
-      .attr("y",gridCoords[i].y-adjust)
-      .attr("width",lineWidth)
-      .attr("height",lineHeight)
-      .attr("transform","rotate(" + objectsAppearance[i].angel + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
-    }
-    */
   }
   ctx.startTime = Date.now();
 }

@@ -9,12 +9,38 @@
 
     <style>
 
-        body {
-          background-color: white;
+        * {
+          box-sizing: border-box;
+          margin: 0;
         }
 
-        #form {
-          background-color: white;
+        body {
+          font-family: Arial, Helvetica, sans-serif;
+        }
+
+        /* Header */
+        header {
+          background-color: rgb(241, 241, 241);
+          padding: 10px;
+          text-align: center;
+          font-size: 12px;
+          position: -webkit-sticky;
+          position: sticky;
+          top: 0;
+        }
+
+        section {
+          display: flex;
+          justify-content: center;
+        }
+
+        #main {
+          width: 80%;
+        }
+
+        section > div {
+          padding: 2em;
+          margin: auto;
         }
 
         .formLb {
@@ -31,17 +57,13 @@
         }
 
         .instr {
-          font-family:sans-serif;
-          background-color: white;
-          text-align: center;
+          text-align: left;
           margin-left: 0em;
           margin-top: 2em;
           font-size:200%;
           width:800px;
           max-width:800px;
-          display: inline-block;
         }
-
 
       </style>
 
@@ -58,7 +80,7 @@
 
 
   <body onload="createScene();"  onkeydown="ignoreSpace(event);" onkeyup="keyListener(event);">
-    <div>
+    <header>
       <form id="form">
 
         <span class="formLb">Participant:</span>
@@ -75,11 +97,13 @@
         <button onclick="downloadLogs(event)" onkeydown="ignore(event)" onkeyup="ignore(event)">Download log file</button>
 
       </form>
-    </div>
-    <div id="instr">
-    </div>
-    <div id="scene">
-    </div>
+    </header>
+    <section>
+      <div id="main">
+        <div id="instr"></div>
+        <div id="scene"></div>
+      </div>
+    </section>
   </body>
 
 </html>
