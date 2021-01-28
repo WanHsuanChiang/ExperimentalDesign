@@ -41,6 +41,8 @@ var ctx = {
   errorCount: 0
 };
 
+var gridLength = 56;
+
 /****************************************/
 /********** LOAD CSV DESIGN FILE ********/
 /****************************************/
@@ -370,6 +372,7 @@ var displayShapes = function() {
   // 4. We create actual SVG shapes and lay them out as a grid
   // compute coordinates for laying out objects as a grid
   var gridCoords = gridCoordinates(objectCount, 60);
+  var adjust = gridLength/4;  
   // display all objects by adding actual SVG shapes
   for (var i = 0; i < objectCount; i++) {
     if (i == ctx.targetIndex){
@@ -398,12 +401,12 @@ var displayShapes = function() {
       */
      groupObject.append("rect")
      .attr("x",gridCoords[i].x-10)
-     .attr("y",gridCoords[i].y-14)
+     .attr("y",gridCoords[i].y-adjust)
      .attr("width",3)
      .attr("height",28);
      groupObject.append("rect")
      .attr("x",gridCoords[i].x+10)
-     .attr("y",gridCoords[i].y-14)
+     .attr("y",gridCoords[i].y-adjust)
      .attr("width",3)
      .attr("height",28);
     }
@@ -439,22 +442,23 @@ var displayPlaceholders = function() {
   .attr("transform", "translate(100,100)");
 
   var gridCoords = gridCoordinates(objectCount, 60);
+  var adjust = gridLength/2;
   for (var i = 0; i < objectCount; i++) {
     if (i == ctx.targetIndex){
       var placeholder = group.append("rect")
-      .attr("x", gridCoords[i].x-28)
-      .attr("y", gridCoords[i].y-28)
-      .attr("width", 56)
-      .attr("height", 56)
+      .attr("x", gridCoords[i].x-adjust)
+      .attr("y", gridCoords[i].y-adjust)
+      .attr("width", gridLength)
+      .attr("height", gridLength)
       .attr("fill", "Gray")
       .attr("target", true);
     }
     else{
       var placeholder = group.append("rect")
-      .attr("x", gridCoords[i].x-28)
-      .attr("y", gridCoords[i].y-28)
-      .attr("width", 56)
-      .attr("height", 56)
+      .attr("x", gridCoords[i].x-adjust)
+      .attr("y", gridCoords[i].y-adjust)
+      .attr("width", gridLength)
+      .attr("height", gridLength)
       .attr("fill", "Gray")
       .attr("target", false);
     }
