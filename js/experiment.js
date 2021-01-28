@@ -143,6 +143,15 @@ var displayInstructions = function() {
 
 }
 
+var convertSign = function(num){
+  return -Number(num);
+}
+
+// min (included), max (excluded)
+var getRandomInt = function(min,max){
+  return Math.floor(Math.random() * (max - min) ) + min;
+}
+
 var displayShapes = function() {
   console.log(ctx.trials[ctx.cpt]["TrialID"])
   ctx.state = state.SHAPES;
@@ -167,16 +176,26 @@ var displayShapes = function() {
   // In my example, it means deciding on its size (large or small) and its color (light or dark)
   var randomNumber1 = Math.random();
   var randomNumber2 = Math.random();
-  var targetSize, targetColor;
+  //var targetParallelism, targetDirection
+  var parallel = 0;
+  var nonParallel = 10;
+  //var directionBase = getRandomInt(0,360);
+  var directionBase = 0;
+  var directionRotate = directionBase + 45;
+  var targetP, targetD; 
   if(randomNumber1 > 0.5) {
-    targetSize = 25; // target is large
+    targetP = parallel; // target is parallel
+    console.log("targetP: " + targetP);
   } else {
-    targetSize = 15; // target is small
+    targetP = nonParallel; // target is not parallel
+    console.log("targetP: " + targetP);
   }
   if(randomNumber2 > 0.5) {
-    targetColor = "DarkGray"; // target is dark gray
+    targetD = directionBase; // target direction
+    console.log("targetD: " + targetD);
   } else {
-    targetColor = "LightGray"; // target is light gray
+    targetD = directionRotate; // target direction and rotate 45 degree more
+    console.log("targetD: " + targetD);
   }
 
   // 2. Set the visual appearance of all other objects now that the target appearance is decided
@@ -185,139 +204,139 @@ var displayShapes = function() {
 
   for (var i = 0; i < objectCount-1; i++){
     // ADDED Step 2-a
-    if (visualVariable == "Size"){
-      if(targetSize == 25) {
+    if (visualVariable === "Parallelism"){
+      if(targetP === parallel) {
         objectsAppearance.push({
-          size: 15,
-          color: targetColor
+          angel: parallel,
+          direction: targetD // constant
         });
       } else {
         objectsAppearance.push({
-          size: 25,
-          color: targetColor
+          angel: nonParallel,
+          direction: targetD // constant
         });
       }
     }
     // ADDED Step 2-b
-    else if (visualVariable == "Color"){
-      if(targetColor == "DarkGray") {
+    else if (visualVariable == "Direction"){
+      if(targetD === directionBase) {
         objectsAppearance.push({
-          size: targetSize,
-          color: "LightGray"
+          angel: targetP, // constant
+          direction: directionBase
         });
       } else {
         objectsAppearance.push({
-          size: targetSize,
-          color: "DarkGray"
+          angel: targetP, // constant
+          direction: directionRotate
         });
       }
     }
     // ADDED Step 2-c
     else{
-      if (targetSize == 25 && targetColor == "DarkGray"){
+      if (targetP == parallel && targetD == directionBase){
         if (objectCount == 9){
           for (var j = 0; j < 3; j++){
             objectsAppearance.push({
-              size: 25,
-              color: "LightGray"
+              angel: parallel,
+              direction: directionRotate
             });
             objectsAppearance.push({
-              size: 15,
-              color: "DarkGray"
+              angel: nonParallel,
+              direction: directionBase
             });
           }
           for (var j = 0; j < 2; j++){
             objectsAppearance.push({
-              size: 15,
-              color: "LightGray"
+              angel: nonParallel,
+              direction: directionRotate
             });
           }
         }
         else{
           for (var j = 0; j < (objectCount - 1) / 3; j++){
             objectsAppearance.push({
-              size: 25,
-              color: "LightGray"
+              angel: parallel,
+              direction: directionRotate
             });
             objectsAppearance.push({
-              size: 15,
-              color: "DarkGray"
+              angel: nonParallel,
+              direction: directionBase
             });
             objectsAppearance.push({
-              size: 15,
-              color: "LightGray"
+              angel: nonParallel,
+              direction: directionRotate
             });
           }
         }
       }
-      else if (targetSize == 25 && targetColor == "LightGray"){
+      else if (targetP == parallel && targetD == directionRotate){
         if (objectCount == 9){
           for (var j = 0; j < 3; j++){
             objectsAppearance.push({
-              size: 25,
-              color: "DarkGray"
+              angel: parallel,
+              direction: directionBase
             });
             objectsAppearance.push({
-              size: 15,
-              color: "LightGray"
+              angel: nonParallel,
+              direction: directionRotate
             });
           }
           for (var j = 0; j < 2; j++){
             objectsAppearance.push({
-              size: 15,
-              color: "DarkGray"
+              angel: nonParallel,
+              direction: directionBase
             });
           }
         }
         else{
           for (var j = 0; j < (objectCount - 1) / 3; j++){
             objectsAppearance.push({
-              size: 25,
-              color: "DarkGray"
+              angel: parallel,
+              direction: directionBase
             });
             objectsAppearance.push({
-              size: 15,
-              color: "LightGray"
+              angel: nonParallel,
+              direction: directionRotate
             });
             objectsAppearance.push({
-              size: 15,
-              color: "DarkGray"
+              angel: nonParallel,
+              direction: directionBase
             });
           }
         }
       }
-      else if (targetSize == 15 && targetColor == "DarkGray"){
+      else if (targetP == 15 && targetD == directionBase){
         if (objectCount == 9){
           for (var j = 0; j < 3; j++){
             objectsAppearance.push({
-              size: 15,
-              color: "LightGray"
+              angel: nonParallel,
+              direction: directionRotate
             });
             objectsAppearance.push({
-              size: 25,
-              color: "LightGray"
+              angel: parallel,
+              direction: directionRotate
             });
           }
           for (var j = 0; j < 2; j++){
             objectsAppearance.push({
-              size: 25,
-              color: "DarkGray"
+              angel: parallel,
+              direction: directionBase
             });
           }
         }
         else{
           for (var j = 0; j < (objectCount - 1) / 3; j++){
             objectsAppearance.push({
-              size: 15,
-              color: "LightGray"
+              angel: nonParallel,
+              direction: directionRotate
             });
             objectsAppearance.push({
-              size: 25,
-              color: "LightGray"
+              angel: parallel,
+              direction: directionRotate
             });
             objectsAppearance.push({
-              size: 25,
-              color: "DarkGray"
+              angel: parallel,
+              direction: directionBase
             });
           }
         }
@@ -326,34 +345,34 @@ var displayShapes = function() {
         if (objectCount == 9){
           for (var j = 0; j < 3; j++){
             objectsAppearance.push({
-              size: 25,
-              color: "LightGray"
+              angel: parallel,
+              direction: directionRotate
             });
             objectsAppearance.push({
-              size: 25,
-              color: "DarkGray"
+              angel: parallel,
+              direction: directionBase
             });
           }
           for (var j = 0; j < 2; j++){
             objectsAppearance.push({
-              size: 15,
-              color: "DarkGray"
+              angel: nonParallel,
+              direction: directionBase
             });
           }
         }
         else{
           for (var j = 0; j < (objectCount - 1) / 3; j++){
             objectsAppearance.push({
-              size: 25,
-              color: "LightGray"
+              angel: parallel,
+              direction: directionRotate
             });
             objectsAppearance.push({
-              size: 25,
-              color: "DarkGray"
+              angel: parallel,
+              direction: directionBase
             });
             objectsAppearance.push({
-              size: 15,
-              color: "DarkGray"
+              angel: nonParallel,
+              direction: directionBase
             });
           }
         }
@@ -367,7 +386,7 @@ var displayShapes = function() {
   // draw a random index for the target
   ctx.targetIndex = Math.floor(Math.random()*objectCount);
   // and insert it at this specific index
-  objectsAppearance.splice(ctx.targetIndex, 0, {size:targetSize, color:targetColor});
+  objectsAppearance.splice(ctx.targetIndex, 0, {angel:targetP, direction:targetD});
 
   // 4. We create actual SVG shapes and lay them out as a grid
   // compute coordinates for laying out objects as a grid
@@ -380,50 +399,44 @@ var displayShapes = function() {
   // display all objects by adding actual SVG shapes
   for (var i = 0; i < objectCount; i++) {
     if (i == ctx.targetIndex){
-      /*
-      group.append("circle")
-      .attr("cx", gridCoords[i].x)
-      .attr("cy", gridCoords[i].y)
-      .attr("r", objectsAppearance[i].size)
-      .attr("fill", objectsAppearance[i].color)
-      .attr("target", true);
-      */
       var groupObject = group.append("g")
-      .attr("target",true);
-      /*
+      .attr("target",true)
+      //.attr("transform","rotate(" + objectsAppearance[i].direction + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
+      
       groupObject.append("rect")
-      .attr("x",26.999)
-      .attr("y",22)
-      .attr("transform","matrix(0.9848 -0.1737 0.1737 0.9848 -8.227 5.9693)")
-      .attr("width",6)
-      .attr("height",56);
+      .attr("class","left")
+      .attr("x",gridCoords[i].x-lineMargin)
+      .attr("y",gridCoords[i].y-adjust)
+      .attr("width",lineWidth)
+      .attr("height",lineHeight)
+      .attr("transform","rotate(" + convertSign(objectsAppearance[i].angel) + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
       groupObject.append("rect")
-      .attr("x",67)
-      .attr("y",22)
-      .attr("transform","matrix(0.9848 0.1737 -0.1737 0.9848 9.7481 -11.3979)")
-      .attr("width",5.999)
-      .attr("height",55.999);
-      */
-     groupObject.append("rect")
-     .attr("class","left")
-     .attr("x",gridCoords[i].x-lineMargin)
-     .attr("y",gridCoords[i].y-adjust)
-     .attr("width",lineWidth)
-     .attr("height",lineHeight);
-     groupObject.append("rect")
-     .attr("class","right")
-     .attr("x",gridCoords[i].x+lineMargin)
-     .attr("y",gridCoords[i].y-adjust)
-     .attr("width",lineWidth)
-     .attr("height",lineHeight);
+      .attr("class","right")
+      .attr("x",gridCoords[i].x+lineMargin)
+      .attr("y",gridCoords[i].y-adjust)
+      .attr("width",lineWidth)
+      .attr("height",lineHeight)
+      .attr("transform","rotate(" + objectsAppearance[i].angel + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
     }
     else{
-      group.append("circle")
-      .attr("cx", gridCoords[i].x)
-      .attr("cy", gridCoords[i].y)
-      .attr("r", objectsAppearance[i].size)
-      .attr("fill", objectsAppearance[i].color)
-      .attr("target", false);
+      var groupObject = group.append("g")
+      .attr("target",false)
+      .attr("transform","rotate(" + objectsAppearance[i].direction + ")");
+      
+      groupObject.append("rect")
+      .attr("class","left")
+      .attr("x",gridCoords[i].x-lineMargin)
+      .attr("y",gridCoords[i].y-adjust)
+      .attr("width",lineWidth)
+      .attr("height",lineHeight)
+      .attr("transform","rotate(" + convertSign(objectsAppearance[i].angel) + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
+      groupObject.append("rect")
+      .attr("class","right")
+      .attr("x",gridCoords[i].x+lineMargin)
+      .attr("y",gridCoords[i].y-adjust)
+      .attr("width",lineWidth)
+      .attr("height",lineHeight)
+      .attr("transform","rotate(" + objectsAppearance[i].angel + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
     }
   }
   ctx.startTime = Date.now();
