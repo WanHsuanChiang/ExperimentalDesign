@@ -206,19 +206,17 @@ var displayShapes = function() {
 
   for (var i = 0; i < objectCount-1; i++){
     // ADDED Step 2-a
-    if (visualVariable == "Parallelism"){
+    if (visualVariable == "Parallelism"){      
       if(targetP === parallel) {
+        // if target object is parallel, then others are...
         objectsAppearance.push({
-          targetAngel: parallel,
           angel: nonParallel,
-          targetDirection: targetD, // constant
           direction: targetD // constant
         });
       } else {
+        // if target object is not parallel, then others are...        
         objectsAppearance.push({
-          targetAngel: nonParallel,
           angel: parallel,
-          targetDirection: targetD, // constant
           direction: targetD // constant
         });
       }
@@ -226,17 +224,15 @@ var displayShapes = function() {
     // ADDED Step 2-b
     else if (visualVariable == "Direction"){
       if(targetD === directionBase) {
+        // if target object apply to directionBase, then others are...
         objectsAppearance.push({
-          targetAngel: targetP, //constant
           angel: targetP, // constant
-          targetDirection: directionBase,
           direction: directionRotate
         });
       } else {
-        objectsAppearance.push({
-          targetAngel: targetP, //constant
+        // if target object apply to directionRotate, then others are...
+        objectsAppearance.push({          
           angel: targetP, // constant
-          targetDirection: directionRotate,
           direction: directionBase
         });
       }
@@ -408,11 +404,35 @@ var displayShapes = function() {
 
   // display all objects by adding actual SVG shapes
   for (var i = 0; i < objectCount; i++) {
+
+    var groupObject = group.append("g")
+    .attr("target",Boolean(i == ctx.targetIndex))
+    .attr("transform","rotate(" + objectsAppearance[i].direction + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
+
+    groupObject.append("rect")
+    .attr("class","left")
+    .attr("x",gridCoords[i].x-lineMargin)
+    .attr("y",gridCoords[i].y-adjust)
+    .attr("width",lineWidth)
+    .attr("height",lineHeight)
+    .attr("transform","rotate(" + convertSign(objectsAppearance[i].angel) + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
+    groupObject.append("rect")
+    .attr("class","right")
+    .attr("x",gridCoords[i].x+lineMargin)
+    .attr("y",gridCoords[i].y-adjust)
+    .attr("width",lineWidth)
+    .attr("height",lineHeight)
+    .attr("transform","rotate(" + objectsAppearance[i].angel + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
+
+
+
+    /*
     if (i == ctx.targetIndex){
       var groupObject = group.append("g")
       .attr("target",true)
-      .attr("transform","rotate(" + objectsAppearance[i].targetDirection + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
+      .attr("transform","rotate(" + 0 + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
       
+      console.log(objectsAppearance[i].targetDirection);
       groupObject.append("rect")
       .attr("class","left")
       .attr("x",gridCoords[i].x-lineMargin)
@@ -431,7 +451,7 @@ var displayShapes = function() {
     else{
       var groupObject = group.append("g")
       .attr("target",false)
-      .attr("transform","rotate(" + objectsAppearance[i].direction + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
+      .attr("transform","rotate(" + 45 + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
       
       groupObject.append("rect")
       .attr("class","left")
@@ -448,6 +468,7 @@ var displayShapes = function() {
       .attr("height",lineHeight)
       .attr("transform","rotate(" + objectsAppearance[i].angel + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
     }
+    */
   }
   ctx.startTime = Date.now();
 }
