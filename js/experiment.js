@@ -372,7 +372,11 @@ var displayShapes = function() {
   // 4. We create actual SVG shapes and lay them out as a grid
   // compute coordinates for laying out objects as a grid
   var gridCoords = gridCoordinates(objectCount, 60);
-  var adjust = gridLength/4;  
+  var adjust = gridLength/4;
+  var lineWidth = 3;
+  var lineHeight = 28;
+  var lineMargin = 7;
+
   // display all objects by adding actual SVG shapes
   for (var i = 0; i < objectCount; i++) {
     if (i == ctx.targetIndex){
@@ -384,7 +388,8 @@ var displayShapes = function() {
       .attr("fill", objectsAppearance[i].color)
       .attr("target", true);
       */
-      var groupObject = group.append("g").attr("clip-path","url(#SVGID_6_)");
+      var groupObject = group.append("g")
+      .attr("target",true);
       /*
       groupObject.append("rect")
       .attr("x",26.999)
@@ -400,15 +405,17 @@ var displayShapes = function() {
       .attr("height",55.999);
       */
      groupObject.append("rect")
-     .attr("x",gridCoords[i].x-10)
+     .attr("class","left")
+     .attr("x",gridCoords[i].x-lineMargin)
      .attr("y",gridCoords[i].y-adjust)
-     .attr("width",3)
-     .attr("height",28);
+     .attr("width",lineWidth)
+     .attr("height",lineHeight);
      groupObject.append("rect")
-     .attr("x",gridCoords[i].x+10)
+     .attr("class","right")
+     .attr("x",gridCoords[i].x+lineMargin)
      .attr("y",gridCoords[i].y-adjust)
-     .attr("width",3)
-     .attr("height",28);
+     .attr("width",lineWidth)
+     .attr("height",lineHeight);
     }
     else{
       group.append("circle")
