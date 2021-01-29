@@ -446,6 +446,33 @@ var keyListener = function(event) {
 
 }
 
+var mouseListener = function(event){
+  if(ctx.state == state.SHAPES){
+    ctx.state == state.NONE;
+    var alert = document.getElementById("alert");      
+    alert.style.display = "flex";
+  }
+}
+
+var closeModal = function(event){  
+  var alert = document.getElementById("alert");
+  alert.style.display = "none";
+  location.reload();
+}
+
+window.onclick = function(event) {
+  var alert = document.getElementById("alert");
+  if (event.target == alert) {
+    alert.style.display = "none";
+    location.reload();
+  }
+}
+
+// Source: https://www.sitepoint.com/delay-sleep-pause-wait/
+var sleep = function(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 var downloadLogs = function(event) {
   event.preventDefault();
   var csvContent = "data:text/csv;charset=utf-8,";

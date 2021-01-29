@@ -20,7 +20,7 @@
 
         /* Header */
         header {
-          background-color: rgb(241, 241, 241);
+          background-color: rgb(245, 245, 245);
           padding: 10px;
           text-align: center;
           font-size: 12px;
@@ -91,6 +91,42 @@
           color: lightcoral;
         }
 
+        #alert {
+          display: none;
+          justify-content: center;        
+          position: fixed;
+          z-index: 1;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          overflow: auto;
+          background-color: rgb(0,0,0); /* Fallback color */
+          background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        #alert > div {
+          padding: 1em;
+          background-color: white;
+          width: 40%;
+          height: fit-content;
+        }
+
+        #alert > div:first-child{
+          margin-top: 100px;
+        }
+
+        #alert > div:last-child {
+          padding-bottom: 2em;
+        }
+
+        #modal-close {
+          text-align: right;
+        }
+
+        #modal-btn{
+          text-align: center;
+        }
       </style>
 
       <script>
@@ -105,7 +141,16 @@
   </head>
 
 
-  <body onload="createScene();"  onkeydown="ignoreSpace(event);" onkeyup="keyListener(event);">
+  <body onload="createScene();"  onkeydown="ignoreSpace(event);" onkeyup="keyListener(event);" onmousemove="mouseListener(event)">
+    <div id="alert" class="modal">
+      <div>
+        <div id="modal-close" onclick="closeModal(event)">&times;</div>
+        <div id="modal-content">
+          <p>Do not move your cursor during each trial. The experiement will restart after you close the this message.</p>
+        </div>
+        <div id="modal-btn"><button onclick="closeModal(event)">Restart Experiment</button></div>
+      </div>      
+    </div>
     <header>
       <form id="form">
 
@@ -129,7 +174,7 @@
         <div id="instr"></div>
         <div id="scene"></div>
       </div>
-    </section>
+    </section>    
   </body>
 
 </html>
