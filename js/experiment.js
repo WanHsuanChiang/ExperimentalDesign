@@ -127,7 +127,7 @@ var displayInstructions = function() {
 
   d3.select("#instructions")
     .append("p")
-    .html("Multiple shapes will get displayed.<br> Only <b>one shape</b> is different from all other shapes.");
+    .html("Multiple shapes will get displayed.<br> Only <strong>one shape</strong> is different from all other shapes.");
 
   // order list start
   var steps = [
@@ -136,7 +136,6 @@ var displayInstructions = function() {
   ];
 
   var ol = d3.select("#instructions")
-  .append("div")
   .append("ol");
 
   for (var i = 0; i < steps.length; i++){
@@ -146,7 +145,7 @@ var displayInstructions = function() {
 
   d3.select("#instructions")
     .append("p")
-    .html("Press <code>Enter</code> key when ready to start.");
+    .html("<strong>Press <code>Enter</code></strong> key when ready to start.");
 
 }
 
