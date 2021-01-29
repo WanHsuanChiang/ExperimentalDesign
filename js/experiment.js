@@ -185,8 +185,9 @@ var displayShapes = function() {
   
   var parallel = 0;
   var nonParallel = 10;
-  var directionBase = getRandomInt(0,360);
-  var directionRotate = directionBase + 45;
+  //var directionBase = getRandomInt(0,360);
+  var directionBase = 0;
+  var directionRotate = directionBase + 90;
   //var targetParallelism, targetDirection
   //Define the value
   var targetP, targetD; 
