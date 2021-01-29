@@ -381,31 +381,20 @@ var displayPlaceholders = function() {
   var gridCoords = gridCoordinates(objectCount, 60);
   var adjust = gridLength/2;
   for (var i = 0; i < objectCount; i++) {
-    if (i == ctx.targetIndex){
-      var placeholder = group.append("rect")
+    var placeholder = group.append("rect")
       .attr("x", gridCoords[i].x-adjust)
       .attr("y", gridCoords[i].y-adjust)
       .attr("width", gridLength)
       .attr("height", gridLength)
       .attr("fill", "Gray")
-      .attr("target", true);
-    }
-    else{
-      var placeholder = group.append("rect")
-      .attr("x", gridCoords[i].x-adjust)
-      .attr("y", gridCoords[i].y-adjust)
-      .attr("width", gridLength)
-      .attr("height", gridLength)
-      .attr("fill", "Gray")
-      .attr("target", false);
-    }
+      .attr("target", Boolean(i == ctx.targetIndex));
 
     placeholder.on("click",
         function() {
           // TODO
           // ADDED step 1-b
           ctx.endTime = Date.now();
-          if (this.getAttribute("target") == "true"){
+          if (this.getAttribute("target")){
             ctx.visualSearchTime = ctx.endTime - ctx.startTime;
             ctx.loggedTrials.push(["Preattention-experiment",ctx.trials[ctx.cpt]["ParticipantID"], ctx.trials[ctx.cpt]["TrialID"], ctx.trials[ctx.cpt]["Block1"],ctx.trials[ctx.cpt]["Trial"],ctx.trials[ctx.cpt]["VV"],ctx.trials[ctx.cpt]["OC"],ctx.visualSearchTime,ctx.errorCount]);
             ctx.errorCount = 0;
@@ -421,13 +410,24 @@ var displayPlaceholders = function() {
           }
           else{
             ctx.errorCount++;
-            d3.select("#placeholders").remove();
-            displayShapes();
+            restartTrial();
           }
         }
       );
 
   }
+}
+
+var restartTrial = function(){
+  if(ctx.state == state.SHAPES){
+    d3.select("#shapes").remove();
+    displayShapes();
+  } else if (ctx.state == state.PLACEHOLDERS){
+    d3.select("#placeholders").remove();
+    displayShapes();
+  } else {
+    return;
+  }  
 }
 
 var keyListener = function(event) {
@@ -457,14 +457,14 @@ var mouseListener = function(event){
 var closeModal = function(event){  
   var alert = document.getElementById("alert");
   alert.style.display = "none";
-  location.reload();
+  restartTrial();
 }
 
 window.onclick = function(event) {
   var alert = document.getElementById("alert");
   if (event.target == alert) {
     alert.style.display = "none";
-    location.reload();
+    restartTrial();
   }
 }
 
