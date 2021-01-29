@@ -248,19 +248,25 @@ var displayShapes = function() {
   }
   // VV = ParallelismDirection (Combination)
   else { 
-    
+    /*
     var list = [
       [parallel,directionBase],
       [parallel,directionRotate],
       [nonParallel,directionBase],
       [nonParallel,directionRotate]
     ];
+    var test1 = list[0];
+    var test = list.indexOf([targetP,targetD]);
+    console.log("Index: "+test);
+    console.log(list);
     // remove target combination in the list
     for(var j = 0; j < list.length; j++){
-      if( list[j] === [targetP,targetD]){
+      if( list[j] = [targetP,targetD]){
         list.splice(j,1);
       }
     }
+    console.log("after:"+list);
+    */    
     // allocate the rest of the object appearance
     let canAllocate = (objectCount-1)-2*3;
     let a1 = getRandomInt(0,canAllocate+1);
@@ -268,8 +274,28 @@ var displayShapes = function() {
     let a3 = canAllocate-a1-a2;
     var subCount = [ a1+2 , a2+2 , a3+2 ];
     shuffle(subCount);
+
+    var lists = [];
+    if(targetP === parallel){
+      lists.push([nonParallel,directionBase,subCount[0]]);
+      lists.push([nonParallel,directionRotate,subCount[1]]);
+      if (targetD === directionBase){
+        lists.push([parallel,directionRotate,subCount[2]]);
+      } else {
+        lists.push([parallel,directionBase,subCount[2]]);
+      }
+    } else {
+      lists.push([parallel,directionBase,subCount[0]]);
+      lists.push([parallel,directionRotate,subCount[1]]);
+      if(targetD === directionBase){
+        lists.push([nonParallel,directionRotate,subCount[2]]);
+      } else {
+        lists.push([nonParallel,directionBase,subCount[2]]);
+      }
+    }
     // push inside the array
     // for each combination
+    /*
     for(var k = 0; k < list.length; k++){
       // the combination and the subCount match in terms of the same index (order) in their own array
       for(var i = 0; i < subCount[k]; i++){
@@ -277,6 +303,17 @@ var displayShapes = function() {
           angle: list[k][0],
           direction: list[k][1]
         });
+      }
+    }*/
+    for(var i = 0; i < lists.length; i++) {
+      var list = lists[i];
+      for(var j = 0; j < list.length; j++) {
+          for(var k = 0; k < list[2]; k++){
+            objectsAppearance.push({
+              angel: list[0],
+              direction: list[1]
+            });
+          }
       }
     }
   }  
