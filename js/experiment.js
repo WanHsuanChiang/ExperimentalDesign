@@ -109,7 +109,6 @@ var startExperiment = function(event) {
       }
     }
   }
-
 }
 
 var nextTrial = function() {
@@ -149,6 +148,7 @@ var displayInstructions = function() {
 
 }
 
+// add - for any numbers
 var convertSign = function(num){
   return -Number(num);
 }
@@ -414,10 +414,10 @@ var displayPlaceholders = function() {
           }
         }
       );
-
   }
 }
 
+// restart the trial
 var restartTrial = function(){
   if(ctx.state == state.SHAPES){
     d3.select("#shapes").remove();
@@ -446,6 +446,7 @@ var keyListener = function(event) {
 
 }
 
+// the alert box will display while users moving cursor when shape displayed
 var mouseListener = function(event){
   if(ctx.state == state.SHAPES){
     ctx.state == state.NONE;
@@ -454,23 +455,20 @@ var mouseListener = function(event){
   }
 }
 
+// close alert box and restart the trial
 var closeModal = function(event){  
   var alert = document.getElementById("alert");
   alert.style.display = "none";
   restartTrial();
 }
 
+// close alert box and restart the trial
 window.onclick = function(event) {
   var alert = document.getElementById("alert");
   if (event.target == alert) {
     alert.style.display = "none";
     restartTrial();
   }
-}
-
-// Source: https://www.sitepoint.com/delay-sleep-pause-wait/
-var sleep = function(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 var downloadLogs = function(event) {
@@ -489,7 +487,6 @@ var downloadLogs = function(event) {
   .attr("download","logs_"+ctx.trials[ctx.cpt][ctx.participantIndex]+"_"+Date.now()+".csv")
   .text("logs_"+ctx.trials[ctx.cpt][ctx.participantIndex]+"_"+Date.now()+".csv");
 }
-
 
 // returns an array of coordinates for laying out objectCount objects as a grid with an equal number of lines and columns
 function gridCoordinates(objectCount, cellSize) {
