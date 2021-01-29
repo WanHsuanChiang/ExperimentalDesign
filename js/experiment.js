@@ -440,6 +440,8 @@ var keyListener = function(event) {
   else if(ctx.state == state.SHAPES && event.code == "Space") {
     d3.select("#shapes").remove();
     displayPlaceholders();
+  } else if(ctx.state == state.INSTRUCTIONS && event.code == "Space"){
+    alert("Please press \"Space\" to continue!");
   }
 
 }
