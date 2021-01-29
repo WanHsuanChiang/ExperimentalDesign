@@ -8,8 +8,8 @@ var state = {
 };
 var test;
 var ctx = {
-  w: 800,
-  h: 600,
+  w: 400,
+  h: 400,
 
   trials: [],
   participant: "",
@@ -127,7 +127,7 @@ var displayInstructions = function() {
 
   d3.select("#instructions")
     .append("p")
-    .html("Multiple shapes will get displayed.<br> Only <strong>one shape</strong> is different from all other shapes.");
+    .html("Multiple shapes will get displayed. Only <strong>one shape</strong> is different from all other shapes.");
 
   // order list start
   var steps = [
@@ -176,7 +176,7 @@ var displayShapes = function() {
   var svgElement = d3.select("svg");
   var group = svgElement.append("g")
   .attr("id", "shapes")
-  .attr("transform", "translate(100,100)");
+  .attr("transform", "translate(50,50)");
 
   // 1. Decide on the visual appearance of the target
   // In my example, it means deciding on its size (large or small) and its color (light or dark)
@@ -376,7 +376,7 @@ var displayPlaceholders = function() {
   var svgElement = d3.select("svg");
   var group = svgElement.append("g")
   .attr("id", "placeholders")
-  .attr("transform", "translate(100,100)");
+  .attr("transform", "translate(50,50)");
 
   var gridCoords = gridCoordinates(objectCount, 60);
   var adjust = gridLength/2;
@@ -492,9 +492,9 @@ function shuffle(array) {
 
 var createScene = function(){
   var svgEl = d3.select("#scene").append("svg");
-  svgEl.attr("width", ctx.w);
-  svgEl.attr("height", ctx.h)
-  .classed("centered", true);
+  //svgEl.attr("width", ctx.w);
+  //svgEl.attr("height", ctx.h)
+  //.classed("centered", true);
 
   loadData(svgEl);
 };
