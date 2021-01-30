@@ -580,6 +580,17 @@ var downloadLogs = function(event) {
   .attr("href",encodedUri)
   .attr("download","logs_"+ctx.trials[ctx.cpt][ctx.participantIndex]+"_"+Date.now()+".csv")
   .text("logs_"+ctx.trials[ctx.cpt][ctx.participantIndex]+"_"+Date.now()+".csv");
+
+  var end =  document.getElementById("end");
+  if (typeof(end) != 'undefined' && end != null)
+  {
+    d3.select("#end-action")
+      .append("a")
+      .attr("href",encodedUri)
+      .attr("download","logs_"+ctx.trials[ctx.cpt][ctx.participantIndex]+"_"+Date.now()+".csv")
+      .text("logs_"+ctx.trials[ctx.cpt][ctx.participantIndex]+"_"+Date.now()+".csv");
+  }
+  
 }
 
 // returns an array of coordinates for laying out objectCount objects as a grid with an equal number of lines and columns
