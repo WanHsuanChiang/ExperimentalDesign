@@ -86,6 +86,10 @@ var startExperiment = function(event) {
   event.preventDefault();
 
   d3.select("#end").remove();
+  d3.select("#start").remove();
+  d3.select("#instructions").remove();
+  d3.select("#shapes").remove();
+  d3.select("#placeholders").remove();
 
   // set the trial counter to the first trial to run
   // ctx.participant, ctx.startBlock and ctx.startTrial contain values selected in combo boxes
@@ -121,6 +125,55 @@ var nextTrial = function() {
   } else {
     displayInstructions();    
   }  
+}
+
+var displayStart = function() {
+
+  d3.select("#instr")
+    .append("div")
+    .attr("id","start")
+    .attr("class","container");
+
+  d3.select("#start")
+    .append("div")
+    .append("p")
+    .html("Thank you for attending this experiment which tests whether the visual variables such as shapes, color, and size, are preattentive or not. You will be asked to select the object that is different from others as fast as possible. The experiement will take less than 10 minutes. The usage of your results is for academic purposes only and will not open to the public. Thank you for your participation.");
+  
+  d3.select("#start")
+    .append("p")
+    .html("Best,<br>Ainura and Angela")
+
+  var ul = d3.select("#start")
+    .append("div")
+    .attr("id","info")
+    .append("ul");
+  
+  var info = [
+      "Students: <a href=\"mailto:ainura011194@gmail.com\">Ainura Dalabayeva</a>, <a href=\"mailto:wan-hsuan.chiang@universite-paris-saclay.fr\">Wan-Hsuan Chiang (Angela)</a>",
+      "Professor: Caroline Appert",
+      "Course: Experimental Design and Analysis",
+      "University: University of Paris-Saclay"
+  ];  
+  
+  for (var i = 0; i < info.length; i++){
+    ul.append("li").html(info[i]);
+  };
+  
+  // button area
+  d3.select("#start")
+    .append("div")
+    .attr("id","start-action")
+    .attr("class","action")
+    .attr("class","container");
+  
+  d3.select("#start-action")
+    .append("button")
+    .attr("onclick","startExperiment(event)")//add startExperiment event
+    .html("Go"); 
+  
+  d3.select("#start")
+    .append("p")
+    .html("Please make sure you select the correct participant ID");
 }
 
 var displayInstructions = function() {
@@ -454,7 +507,6 @@ var displayEnd = function() {
     .append("button")
     .attr("onclick","downloadLogs(event)")//add downloadLogs event
     .html("Download Log File"); 
-
 }
 
 // restart the trial

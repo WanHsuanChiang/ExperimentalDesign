@@ -132,8 +132,18 @@
           text-align: center;
         }
 
-        #end {
+        #end , #start {
           flex-direction: column;
+        }
+
+        #start > p:last-child {
+          font-size: 10px;
+          text-align: center;
+        }
+
+        #info {
+          color:darkgrey;
+          font-size: 10px;
         }
 
       </style>
@@ -150,7 +160,7 @@
   </head>
 
 
-  <body onload="createScene();"  onkeydown="ignoreSpace(event);" onkeyup="keyListener(event);" onmousemove="mouseListener(event)">
+  <body onload="createScene();displayStart();"  onkeydown="ignoreSpace(event);" onkeyup="keyListener(event);" onmousemove="mouseListener(event)">
     <header>
       <form id="form">
 
