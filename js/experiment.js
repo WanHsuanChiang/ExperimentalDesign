@@ -190,7 +190,7 @@ var displayInstructions = function() {
 
   // order list start
   var steps = [
-    "Spot it as fast as possible and press <code>Space</code> bar;",
+    "Spot it as fast as possible and press <span class=\"key\">Space</span> bar;",
     "Click on the placeholder over that shape."
   ];
 
@@ -204,7 +204,7 @@ var displayInstructions = function() {
 
   d3.select("#instructions")
     .append("p")
-    .html("<strong>Press <code>Enter</code></strong> key when ready to start.");
+    .html("Press <span class=\"key\">Space</span> key when ready to start.");
 
 }
 
@@ -525,24 +525,26 @@ var restartTrial = function(){
 var keyListener = function(event) {
   event.preventDefault();
 
-  if(ctx.state == state.INSTRUCTIONS && event.code == "Enter") {
-    d3.select("#instructions").remove();
-    displayShapes();
-  }//ADDED step 1-a
-  else if(ctx.state == state.SHAPES && event.code == "Space") {
-    d3.select("#shapes").remove();
-    displayPlaceholders();
-  } else if(ctx.state == state.INSTRUCTIONS && event.code == "Space"){
-    alert("Please press \"Space\" to continue!");
+  if(event.code == "Space") {
+    if(ctx.state == state.INSTRUCTIONS){
+      d3.select("#instructions").remove();
+      displayShapes();
+    } else if (ctx.state == state.SHAPES){
+      d3.select("#shapes").remove();
+      displayPlaceholders();
+    } else {
+      return;
+    }
+  } else {
+    return;
   }
-
 }
 
 // the alert box will display while users moving cursor when shape displayed
 var mouseListener = function(event){
   if(ctx.state == state.SHAPES){
     ctx.state == state.NONE;
-    var alert = document.getElementById("alert");      
+    var alert = document.getElementById("alert"); 
     alert.style.display = "flex";
   }
 }
