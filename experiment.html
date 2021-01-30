@@ -9,12 +9,40 @@
 
     <style>
 
-        body {
-          background-color: white;
+        * {
+          box-sizing: border-box;
+          margin: 0;
         }
 
-        #form {
-          background-color: white;
+        body {
+          font-family: Arial, Helvetica, sans-serif;
+        }
+
+        /* Header */
+        header {
+          background-color: rgb(245, 245, 245);
+          padding: 10px;
+          text-align: center;
+          font-size: 12px;
+          position: -webkit-sticky;
+          position: sticky;
+          top: 0;
+        }
+
+        section {
+          display: flex;
+          justify-content: center;
+          height: 100vh;
+        }
+
+        #main {
+          width: 80%;
+          height:inherit;
+        }
+
+        section > div {
+          padding: 2em;
+          margin: auto;
         }
 
         .formLb {
@@ -31,17 +59,98 @@
         }
 
         .instr {
-          font-family:sans-serif;
-          background-color: white;
-          text-align: center;
+          text-align: left;
           margin-left: 0em;
           margin-top: 2em;
           font-size:200%;
-          width:800px;
-          max-width:800px;
-          display: inline-block;
+          word-wrap: normal;
         }
 
+        #scene {
+          height: inherit;
+          display: flex;
+          justify-content: center;
+        }
+
+        svg { 
+          min-width: 450px;
+          min-height: 450px;
+          display: flex;
+          justify-content: center;
+        }
+
+        #shapes {
+          position: relative;
+        }
+
+        p,ol{
+          margin: 1em;
+        }
+
+        strong{
+          color: lightcoral;
+        }
+
+        .key {
+          border: 1px solid black;
+          border-radius: 5px;
+          padding: 5px;
+        }
+
+        #alert {
+          display: none;      
+          position: fixed;
+          z-index: 1;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          overflow: auto;
+          background-color: rgb(0,0,0); /* Fallback color */
+          background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        #alert > div {
+          padding: 1em;
+          background-color: white;
+          width: 40%;
+          height: fit-content;
+        }
+
+        #alert > div:first-child{
+          margin-top: 100px;
+        }
+
+        #alert > div:last-child {
+          padding-bottom: 2em;
+        }
+
+        #modal-close {
+          text-align: right;
+        }
+
+        .container {
+          display: flex;
+          justify-content: center;
+        }
+
+        .action {
+          text-align: center;
+        }
+
+        #end , #start {
+          flex-direction: column;
+        }
+
+        #start > p:last-child {
+          font-size: 10px;
+          text-align: center;
+        }
+
+        #info {
+          color:darkgrey;
+          font-size: 10px;
+        }
 
       </style>
 
@@ -57,8 +166,8 @@
   </head>
 
 
-  <body onload="createScene();"  onkeydown="ignoreSpace(event);" onkeyup="keyListener(event);">
-    <div>
+  <body onload="createScene();displayStart();"  onkeydown="ignoreSpace(event);" onkeyup="keyListener(event);" onmousemove="mouseListener(event)">
+    <header>
       <form id="form">
 
         <span class="formLb">Participant:</span>
@@ -75,11 +184,22 @@
         <button onclick="downloadLogs(event)" onkeydown="ignore(event)" onkeyup="ignore(event)">Download log file</button>
 
       </form>
-    </div>
-    <div id="instr">
-    </div>
-    <div id="scene">
-    </div>
+    </header>
+    <section>
+      <div id="main">
+        <div id="instr"></div>
+        <div id="scene"></div>
+      </div>      
+      <div id="alert" class="modal container">
+        <div>
+          <div id="modal-close" onclick="closeModal(event)">&times;</div>
+          <div id="modal-content">
+            <p>Do not move your cursor during each trial. This trial will restart after you close the this message.</p>
+          </div>
+          <div id="modal-btn" class="container action"><button onclick="closeModal(event)">Restart Trial</button></div>
+        </div>      
+      </div>      
+    </section>    
   </body>
 
 </html>

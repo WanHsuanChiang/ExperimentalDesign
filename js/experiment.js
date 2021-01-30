@@ -8,8 +8,8 @@ var state = {
 };
 var test;
 var ctx = {
-  w: 800,
-  h: 600,
+  w: 400,
+  h: 400,
 
   trials: [],
   participant: "",
@@ -85,6 +85,12 @@ var loadData = function(svgEl){
 var startExperiment = function(event) {
   event.preventDefault();
 
+  d3.select("#end").remove();
+  d3.select("#start").remove();
+  d3.select("#instructions").remove();
+  d3.select("#shapes").remove();
+  d3.select("#placeholders").remove();
+
   // set the trial counter to the first trial to run
   // ctx.participant, ctx.startBlock and ctx.startTrial contain values selected in combo boxes
 
@@ -109,12 +115,65 @@ var startExperiment = function(event) {
       }
     }
   }
-
 }
 
+// add end trial function
 var nextTrial = function() {
   ctx.cpt++;
-  displayInstructions();
+  if(ctx.trials[ctx.cpt]["ParticipantID"] !== ctx.participant) {
+    displayEnd();
+  } else {
+    displayInstructions();    
+  }  
+}
+
+var displayStart = function() {
+
+  d3.select("#instr")
+    .append("div")
+    .attr("id","start")
+    .attr("class","container");
+
+  d3.select("#start")
+    .append("div")
+    .append("p")
+    .html("Thank you for attending this experiment which tests whether the visual variables such as shapes, color, and size, are preattentive or not. You will be asked to select the object that is different from others as fast as possible. The experiement will take less than 10 minutes. The usage of your results is for academic purposes only and will not open to the public. Thank you for your participation.");
+  
+  d3.select("#start")
+    .append("p")
+    .html("Best,<br>Ainura and Angela")
+
+  var ul = d3.select("#start")
+    .append("div")
+    .attr("id","info")
+    .append("ul");
+  
+  var info = [
+      "Students: <a href=\"mailto:ainura011194@gmail.com\">Ainura Dalabayeva</a>, <a href=\"mailto:wan-hsuan.chiang@universite-paris-saclay.fr\">Wan-Hsuan Chiang (Angela)</a>",
+      "Professor: Caroline Appert",
+      "Course: Experimental Design and Analysis",
+      "University: University of Paris-Saclay"
+  ];  
+  
+  for (var i = 0; i < info.length; i++){
+    ul.append("li").html(info[i]);
+  };
+  
+  // button area
+  d3.select("#start")
+    .append("div")
+    .attr("id","start-action")
+    .attr("class","action")
+    .attr("class","container");
+  
+  d3.select("#start-action")
+    .append("button")
+    .attr("onclick","startExperiment(event)")//add startExperiment event
+    .html("Go"); 
+  
+  d3.select("#start")
+    .append("p")
+    .html("Please make sure you select the correct participant ID");
 }
 
 var displayInstructions = function() {
@@ -127,29 +186,26 @@ var displayInstructions = function() {
 
   d3.select("#instructions")
     .append("p")
-    .html("Multiple shapes will get displayed.<br> Only <b>one shape</b> is different from all other shapes.");
+    .html("Multiple shapes will get displayed. Only <strong>one shape</strong> is different from all other shapes.");
+
+  // order list start
+  var steps = [
+    "Spot it as fast as possible and press <span class=\"key\">Space</span> bar;",
+    "Click on the placeholder over that shape."
+  ];
+
+  var ol = d3.select("#instructions")
+  .append("ol");
+
+  for (var i = 0; i < steps.length; i++){
+    ol.append("li").html(steps[i]);
+  }
+  // order list end
 
   d3.select("#instructions")
     .append("p")
-    .html("1. Spot it as fast as possible and press <code>Space</code> bar;");
+    .html("Press <span class=\"key\">Space</span> key when ready to start.");
 
-  d3.select("#instructions")
-    .append("p")
-    .html("2. Click on the placeholder over that shape.");
-
-  d3.select("#instructions")
-    .append("p")
-    .html("Press <code>Enter</code> key when ready to start.");
-
-}
-
-var convertSign = function(num){
-  return -Number(num);
-}
-
-// min (included), max (excluded)
-var getRandomInt = function(min,max){
-  return Math.floor(Math.random() * (max - min) ) + min;
 }
 
 var displayShapes = function() {
@@ -170,7 +226,7 @@ var displayShapes = function() {
   var svgElement = d3.select("svg");
   var group = svgElement.append("g")
   .attr("id", "shapes")
-  .attr("transform", "translate(100,100)");
+  .attr("transform", "translate(50,50)");
 
   // 1. Decide on the visual appearance of the target
   // In my example, it means deciding on its size (large or small) and its color (light or dark)
@@ -180,8 +236,8 @@ var displayShapes = function() {
   var parallel = 0;
   var nonParallel = 10;
   //var directionBase = getRandomInt(0,360);
-  var directionBase = 0;
-  var directionRotate = directionBase + 45;
+  var directionBase = 45;
+  var directionRotate = directionBase + 90;
   //var targetParallelism, targetDirection
   //Define the value
   var targetP, targetD; 
@@ -204,184 +260,113 @@ var displayShapes = function() {
   // Here, we implement the case VV = "Size" so all other objects are large (resp. small) if target is small (resp. large) but have the same color as target.
   var objectsAppearance = [];
 
-  for (var i = 0; i < objectCount-1; i++){
-    // ADDED Step 2-a
-    if (visualVariable === "Parallelism"){
-      if(targetP === parallel) {
-        objectsAppearance.push({
-          angel: parallel,
-          direction: targetD // constant
-        });
-      } else {
+  // VV = Parallelism
+  if(visualVariable == "Parallelism"){
+    for (var i = 0; i < objectCount-1; i++){
+      if(targetP === parallel) {        
+        // if target object is parallel, then others are...        
         objectsAppearance.push({
           angel: nonParallel,
           direction: targetD // constant
         });
+      } else {
+        // if target object is not parallel, then others are...        
+        objectsAppearance.push({
+          angel: parallel,
+          direction: targetD // constant
+        });
       }
     }
-    // ADDED Step 2-b
-    else if (visualVariable == "Direction"){
+  } 
+  // VV = Direction
+  else if (visualVariable == "Direction") {
+    for (var i = 0; i < objectCount-1; i++){
       if(targetD === directionBase) {
-        objectsAppearance.push({
-          angel: targetP, // constant
-          direction: directionBase
-        });
-      } else {
+        // if target object apply to directionBase, then others are...
         objectsAppearance.push({
           angel: targetP, // constant
           direction: directionRotate
         });
+      } else {
+        // if target object apply to directionRotate, then others are...
+        objectsAppearance.push({          
+          angel: targetP, // constant
+          direction: directionBase
+        });
       }
-    }
-    // ADDED Step 2-c
-    else{
-      if (targetP == parallel && targetD == directionBase){
-        if (objectCount == 9){
-          for (var j = 0; j < 3; j++){
-            objectsAppearance.push({
-              angel: parallel,
-              direction: directionRotate
-            });
-            objectsAppearance.push({
-              angel: nonParallel,
-              direction: directionBase
-            });
-          }
-          for (var j = 0; j < 2; j++){
-            objectsAppearance.push({
-              angel: nonParallel,
-              direction: directionRotate
-            });
-          }
-        }
-        else{
-          for (var j = 0; j < (objectCount - 1) / 3; j++){
-            objectsAppearance.push({
-              angel: parallel,
-              direction: directionRotate
-            });
-            objectsAppearance.push({
-              angel: nonParallel,
-              direction: directionBase
-            });
-            objectsAppearance.push({
-              angel: nonParallel,
-              direction: directionRotate
-            });
-          }
-        }
-      }
-      else if (targetP == parallel && targetD == directionRotate){
-        if (objectCount == 9){
-          for (var j = 0; j < 3; j++){
-            objectsAppearance.push({
-              angel: parallel,
-              direction: directionBase
-            });
-            objectsAppearance.push({
-              angel: nonParallel,
-              direction: directionRotate
-            });
-          }
-          for (var j = 0; j < 2; j++){
-            objectsAppearance.push({
-              angel: nonParallel,
-              direction: directionBase
-            });
-          }
-        }
-        else{
-          for (var j = 0; j < (objectCount - 1) / 3; j++){
-            objectsAppearance.push({
-              angel: parallel,
-              direction: directionBase
-            });
-            objectsAppearance.push({
-              angel: nonParallel,
-              direction: directionRotate
-            });
-            objectsAppearance.push({
-              angel: nonParallel,
-              direction: directionBase
-            });
-          }
-        }
-      }
-      else if (targetP == 15 && targetD == directionBase){
-        if (objectCount == 9){
-          for (var j = 0; j < 3; j++){
-            objectsAppearance.push({
-              angel: nonParallel,
-              direction: directionRotate
-            });
-            objectsAppearance.push({
-              angel: parallel,
-              direction: directionRotate
-            });
-          }
-          for (var j = 0; j < 2; j++){
-            objectsAppearance.push({
-              angel: parallel,
-              direction: directionBase
-            });
-          }
-        }
-        else{
-          for (var j = 0; j < (objectCount - 1) / 3; j++){
-            objectsAppearance.push({
-              angel: nonParallel,
-              direction: directionRotate
-            });
-            objectsAppearance.push({
-              angel: parallel,
-              direction: directionRotate
-            });
-            objectsAppearance.push({
-              angel: parallel,
-              direction: directionBase
-            });
-          }
-        }
-      }
-      else{
-        if (objectCount == 9){
-          for (var j = 0; j < 3; j++){
-            objectsAppearance.push({
-              angel: parallel,
-              direction: directionRotate
-            });
-            objectsAppearance.push({
-              angel: parallel,
-              direction: directionBase
-            });
-          }
-          for (var j = 0; j < 2; j++){
-            objectsAppearance.push({
-              angel: nonParallel,
-              direction: directionBase
-            });
-          }
-        }
-        else{
-          for (var j = 0; j < (objectCount - 1) / 3; j++){
-            objectsAppearance.push({
-              angel: parallel,
-              direction: directionRotate
-            });
-            objectsAppearance.push({
-              angel: parallel,
-              direction: directionBase
-            });
-            objectsAppearance.push({
-              angel: nonParallel,
-              direction: directionBase
-            });
-          }
-        }
-      }
-    }
+    }    
   }
-  
+  // VV = ParallelismDirection (Combination)
+  else { 
+    /*
+    var list = [
+      [parallel,directionBase],
+      [parallel,directionRotate],
+      [nonParallel,directionBase],
+      [nonParallel,directionRotate]
+    ];
+    var test1 = list[0];
+    var test = list.indexOf([targetP,targetD]);
+    console.log("Index: "+test);
+    console.log(list);
+    // remove target combination in the list
+    for(var j = 0; j < list.length; j++){
+      if( list[j] = [targetP,targetD]){
+        list.splice(j,1);
+      }
+    }
+    console.log("after:"+list);
+    */    
+    // allocate the rest of the object appearance
+    let canAllocate = (objectCount-1)-2*3;
+    let a1 = getRandomInt(0,canAllocate+1);
+    let a2 = getRandomInt(0,canAllocate-a1+1);
+    let a3 = canAllocate-a1-a2;
+    var subCount = [ a1+2 , a2+2 , a3+2 ];
+    shuffle(subCount);
+
+    var lists = [];
+    if(targetP === parallel){
+      lists.push([nonParallel,directionBase,subCount[0]]);
+      lists.push([nonParallel,directionRotate,subCount[1]]);
+      if (targetD === directionBase){
+        lists.push([parallel,directionRotate,subCount[2]]);
+      } else {
+        lists.push([parallel,directionBase,subCount[2]]);
+      }
+    } else {
+      lists.push([parallel,directionBase,subCount[0]]);
+      lists.push([parallel,directionRotate,subCount[1]]);
+      if(targetD === directionBase){
+        lists.push([nonParallel,directionRotate,subCount[2]]);
+      } else {
+        lists.push([nonParallel,directionBase,subCount[2]]);
+      }
+    }
+    // push inside the array
+    // for each combination
+    /*
+    for(var k = 0; k < list.length; k++){
+      // the combination and the subCount match in terms of the same index (order) in their own array
+      for(var i = 0; i < subCount[k]; i++){
+        objectsAppearance.push({
+          angle: list[k][0],
+          direction: list[k][1]
+        });
+      }
+    }*/
+    for(var i = 0; i < lists.length; i++) {
+      var list = lists[i];
+      for(var j = 0; j < list.length; j++) {
+          for(var k = 0; k < list[2]; k++){
+            objectsAppearance.push({
+              angel: list[0],
+              direction: list[1]
+            });
+          }
+      }
+    }
+  }  
 
   // 3. Shuffle the list of objects (useful when there are variations regarding both visual variable) and add the target at a specific index
   shuffle(objectsAppearance);
@@ -400,52 +385,26 @@ var displayShapes = function() {
 
   // display all objects by adding actual SVG shapes
   for (var i = 0; i < objectCount; i++) {
-    if (i == ctx.targetIndex){
-      var groupObject = group.append("g")
-      .attr("target",true)
-      .attr("transform","rotate(" + objectsAppearance[i].direction + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
-      
-      groupObject.append("rect")
-      .attr("class","left")
-      .attr("x",gridCoords[i].x-lineMargin)
-      .attr("y",gridCoords[i].y-adjust)
-      .attr("width",lineWidth)
-      .attr("height",lineHeight)
-      .attr("transform","rotate(" + convertSign(objectsAppearance[i].angel) + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
-      groupObject.append("rect")
-      .attr("class","right")
-      .attr("x",gridCoords[i].x+lineMargin)
-      .attr("y",gridCoords[i].y-adjust)
-      .attr("width",lineWidth)
-      .attr("height",lineHeight)
-      .attr("transform","rotate(" + objectsAppearance[i].angel + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
-    }
-    else{
-      var angelOther;
-      if(objectsAppearance[i].angel == parallel){
-        angelOther = nonParallel;
-      } else {
-        angleOther = parallel;
-      };
-      var groupObject = group.append("g")
-      .attr("target",false)
-      .attr("transform","rotate(" + objectsAppearance[i].direction + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
-      
-      groupObject.append("rect")
-      .attr("class","left")
-      .attr("x",gridCoords[i].x-lineMargin)
-      .attr("y",gridCoords[i].y-adjust)
-      .attr("width",lineWidth)
-      .attr("height",lineHeight)
-      .attr("transform","rotate(" + convertSign(angelOther) + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
-      groupObject.append("rect")
-      .attr("class","right")
-      .attr("x",gridCoords[i].x+lineMargin)
-      .attr("y",gridCoords[i].y-adjust)
-      .attr("width",lineWidth)
-      .attr("height",lineHeight)
-      .attr("transform","rotate(" + angelOther + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
-    }
+
+    var groupObject = group.append("g")
+    .attr("target",Boolean(i == ctx.targetIndex))
+    .attr("transform","rotate(" + objectsAppearance[i].direction + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
+
+    groupObject.append("rect")
+    .attr("class","left")
+    .attr("x",gridCoords[i].x-lineMargin)
+    .attr("y",gridCoords[i].y-adjust)
+    .attr("width",lineWidth)
+    .attr("height",lineHeight)
+    .attr("transform","rotate(" + convertSign(objectsAppearance[i].angel) + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
+    groupObject.append("rect")
+    .attr("class","right")
+    .attr("x",gridCoords[i].x+lineMargin)
+    .attr("y",gridCoords[i].y-adjust)
+    .attr("width",lineWidth)
+    .attr("height",lineHeight)
+    .attr("transform","rotate(" + objectsAppearance[i].angel + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
+
   }
   ctx.startTime = Date.now();
 }
@@ -467,29 +426,18 @@ var displayPlaceholders = function() {
   var svgElement = d3.select("svg");
   var group = svgElement.append("g")
   .attr("id", "placeholders")
-  .attr("transform", "translate(100,100)");
+  .attr("transform", "translate(50,50)");
 
   var gridCoords = gridCoordinates(objectCount, 60);
   var adjust = gridLength/2;
   for (var i = 0; i < objectCount; i++) {
-    if (i == ctx.targetIndex){
-      var placeholder = group.append("rect")
+    var placeholder = group.append("rect")
       .attr("x", gridCoords[i].x-adjust)
       .attr("y", gridCoords[i].y-adjust)
       .attr("width", gridLength)
       .attr("height", gridLength)
       .attr("fill", "Gray")
-      .attr("target", true);
-    }
-    else{
-      var placeholder = group.append("rect")
-      .attr("x", gridCoords[i].x-adjust)
-      .attr("y", gridCoords[i].y-adjust)
-      .attr("width", gridLength)
-      .attr("height", gridLength)
-      .attr("fill", "Gray")
-      .attr("target", false);
-    }
+      .attr("target", Boolean(i == ctx.targetIndex));
 
     placeholder.on("click",
         function() {
@@ -497,6 +445,7 @@ var displayPlaceholders = function() {
           // ADDED step 1-b
           ctx.endTime = Date.now();
           if (this.getAttribute("target") == "true"){
+            console.log("correct");
             ctx.visualSearchTime = ctx.endTime - ctx.startTime;
             ctx.loggedTrials.push(["Preattention-experiment",ctx.trials[ctx.cpt]["ParticipantID"], ctx.trials[ctx.cpt]["TrialID"], ctx.trials[ctx.cpt]["Block1"],ctx.trials[ctx.cpt]["Trial"],ctx.trials[ctx.cpt]["VV"],ctx.trials[ctx.cpt]["OC"],ctx.visualSearchTime,ctx.errorCount]);
             ctx.errorCount = 0;
@@ -504,35 +453,116 @@ var displayPlaceholders = function() {
             if (ctx.participant != ctx.trials[ctx.cpt]["ParticipantID"]){
               console.log("Prev part: " + ctx.participant + " differs from Current part: " + ctx.trials[ctx.cpt]["ParticipantID"]);
             }
-            else{
+            else{              
               if (ctx.cpt != ctx.trials.length - 1){
                 nextTrial();
+              } else {
+                displayEnd();
               }
             }
           }
           else{
+            console.log("error");
             ctx.errorCount++;
-            d3.select("#placeholders").remove();
-            displayShapes();
+            restartTrial();
           }
         }
       );
-
   }
+}
+
+var displayEnd = function() {
+  ctx.state = state.NONE;
+
+  d3.select("#placeholders").remove();
+
+  d3.select("#instr")
+    .append("div")
+    .attr("id","end")
+    .attr("class","container");
+
+  d3.select("#end")
+    .append("div")
+    .append("p")
+    .html("Thank you for participating the experiment. Please download the load file and send it back to Angela or Ainura.");
+
+  var emails = [
+    "Ainura Dalabayeva: <a href=\"mailto:ainura011194@gmail.com\">ainura011194@gmail.com</a>",
+    "Wan-Hsuan Chiang (Angela): <a href=\"mailto:wan-hsuan.chiang@universite-paris-saclay.fr\">wan-hsuan.chiang@universite-paris-saclay.fr</a>"
+  ];
+
+  var ol = d3.select("#end").append("div").append("ol");
+  for (var i = 0; i < emails.length; i++){
+    ol.append("li").html(emails[i]);
+  };
+
+  
+  d3.select("#end")
+    .append("div")
+    .attr("id","end-action")
+    .attr("class","action")
+    .attr("class","container");    
+  
+  d3.select("#end-action")
+    .append("button")
+    .attr("onclick","downloadLogs(event)")//add downloadLogs event
+    .html("Download Log File"); 
+}
+
+// restart the trial
+var restartTrial = function(){
+  if(ctx.state == state.SHAPES){
+    d3.select("#shapes").remove();
+    displayShapes();
+  } else if (ctx.state == state.PLACEHOLDERS){
+    d3.select("#placeholders").remove();
+    displayShapes();
+  } else {
+    return;
+  }  
 }
 
 var keyListener = function(event) {
   event.preventDefault();
 
-  if(ctx.state == state.INSTRUCTIONS && event.code == "Enter") {
-    d3.select("#instructions").remove();
-    displayShapes();
-  }//ADDED step 1-a
-  else if(ctx.state == state.SHAPES && event.code == "Space") {
-    d3.select("#shapes").remove();
-    displayPlaceholders();
+  if(event.code == "Space") {
+    if(ctx.state == state.INSTRUCTIONS){
+      d3.select("#instructions").remove();
+      displayShapes();
+    } else if (ctx.state == state.SHAPES){
+      d3.select("#shapes").remove();
+      displayPlaceholders();
+    } else {
+      return;
+    }
+  } else {
+    return;
   }
+}
 
+// the alert box will display while users moving cursor when shape displayed
+var mouseListener = function(event){
+  if(ctx.state == state.SHAPES){
+    ctx.state == state.NONE;
+    var alert = document.getElementById("alert"); 
+    alert.style.display = "flex";
+  }
+}
+
+// close alert box and restart the trial
+var closeModal = function(event){  
+  var alert = document.getElementById("alert");
+  alert.style.display = "none";
+  restartTrial();
+}
+
+// close alert box and restart the trial
+window.onclick = function(event) {
+  var alert = document.getElementById("alert");
+  if (event.target == alert) {
+    alert.style.display = "none";
+    restartTrial();
+  }
 }
 
 var downloadLogs = function(event) {
@@ -550,8 +580,18 @@ var downloadLogs = function(event) {
   .attr("href",encodedUri)
   .attr("download","logs_"+ctx.trials[ctx.cpt][ctx.participantIndex]+"_"+Date.now()+".csv")
   .text("logs_"+ctx.trials[ctx.cpt][ctx.participantIndex]+"_"+Date.now()+".csv");
-}
 
+  var end =  document.getElementById("end");
+  if (typeof(end) != 'undefined' && end != null)
+  {
+    d3.select("#end-action")
+      .append("a")
+      .attr("href",encodedUri)
+      .attr("download","logs_"+ctx.trials[ctx.cpt][ctx.participantIndex]+"_"+Date.now()+".csv")
+      .text("logs_"+ctx.trials[ctx.cpt][ctx.participantIndex]+"_"+Date.now()+".csv");
+  }
+  
+}
 
 // returns an array of coordinates for laying out objectCount objects as a grid with an equal number of lines and columns
 function gridCoordinates(objectCount, cellSize) {
@@ -579,13 +619,23 @@ function shuffle(array) {
   return array;
 }
 
+// add - for any numbers
+var convertSign = function(num){
+  return -Number(num);
+}
+
+// min (included), max (excluded)
+var getRandomInt = function(min,max){
+  return Math.floor(Math.random() * (max - min) ) + min;
+}
+
 /*********************************************/
 
 var createScene = function(){
   var svgEl = d3.select("#scene").append("svg");
-  svgEl.attr("width", ctx.w);
-  svgEl.attr("height", ctx.h)
-  .classed("centered", true);
+  //svgEl.attr("width", ctx.w);
+  //svgEl.attr("height", ctx.h)
+  //.classed("centered", true);
 
   loadData(svgEl);
 };
