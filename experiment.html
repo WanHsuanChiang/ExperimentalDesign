@@ -92,8 +92,7 @@
         }
 
         #alert {
-          display: none;
-          justify-content: center;        
+          display: none;      
           position: fixed;
           z-index: 1;
           left: 0;
@@ -124,9 +123,19 @@
           text-align: right;
         }
 
-        #modal-btn{
+        .container {
+          display: flex;
+          justify-content: center;
+        }
+
+        .action {
           text-align: center;
         }
+
+        #end {
+          flex-direction: column;
+        }
+
       </style>
 
       <script>
@@ -142,15 +151,6 @@
 
 
   <body onload="createScene();"  onkeydown="ignoreSpace(event);" onkeyup="keyListener(event);" onmousemove="mouseListener(event)">
-    <div id="alert" class="modal">
-      <div>
-        <div id="modal-close" onclick="closeModal(event)">&times;</div>
-        <div id="modal-content">
-          <p>Do not move your cursor during each trial. This trial will restart after you close the this message.</p>
-        </div>
-        <div id="modal-btn"><button onclick="closeModal(event)">Restart Trial</button></div>
-      </div>      
-    </div>
     <header>
       <form id="form">
 
@@ -174,6 +174,17 @@
         <div id="instr"></div>
         <div id="scene"></div>
       </div>
+      <!--
+      <div id="alert" class="modal container">
+        <div>
+          <div id="modal-close" onclick="closeModal(event)">&times;</div>
+          <div id="modal-content">
+            <p>Do not move your cursor during each trial. This trial will restart after you close the this message.</p>
+          </div>
+          <div id="modal-btn" class="container action"><button onclick="closeModal(event)">Restart Trial</button></div>
+        </div>      
+      </div>
+      -->
     </section>    
   </body>
 

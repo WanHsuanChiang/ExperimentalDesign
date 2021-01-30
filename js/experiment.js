@@ -85,6 +85,8 @@ var loadData = function(svgEl){
 var startExperiment = function(event) {
   event.preventDefault();
 
+  d3.select("#end").remove();
+
   // set the trial counter to the first trial to run
   // ctx.participant, ctx.startBlock and ctx.startTrial contain values selected in combo boxes
 
@@ -111,9 +113,14 @@ var startExperiment = function(event) {
   }
 }
 
+// add end trial function
 var nextTrial = function() {
   ctx.cpt++;
-  displayInstructions();
+  if(ctx.trials[ctx.cpt]["ParticipantID"] !== ctx.participant) {
+    displayEnd();
+  } else {
+    displayInstructions();    
+  }  
 }
 
 var displayInstructions = function() {
@@ -148,16 +155,6 @@ var displayInstructions = function() {
 
 }
 
-// add - for any numbers
-var convertSign = function(num){
-  return -Number(num);
-}
-
-// min (included), max (excluded)
-var getRandomInt = function(min,max){
-  return Math.floor(Math.random() * (max - min) ) + min;
-}
-
 var displayShapes = function() {
   console.log(ctx.trials[ctx.cpt]["TrialID"])
   ctx.state = state.SHAPES;
@@ -186,7 +183,7 @@ var displayShapes = function() {
   var parallel = 0;
   var nonParallel = 10;
   //var directionBase = getRandomInt(0,360);
-  var directionBase = 0;
+  var directionBase = 45;
   var directionRotate = directionBase + 90;
   //var targetParallelism, targetDirection
   //Define the value
@@ -394,7 +391,8 @@ var displayPlaceholders = function() {
           // TODO
           // ADDED step 1-b
           ctx.endTime = Date.now();
-          if (this.getAttribute("target")){
+          if (this.getAttribute("target") == "true"){
+            console.log("correct");
             ctx.visualSearchTime = ctx.endTime - ctx.startTime;
             ctx.loggedTrials.push(["Preattention-experiment",ctx.trials[ctx.cpt]["ParticipantID"], ctx.trials[ctx.cpt]["TrialID"], ctx.trials[ctx.cpt]["Block1"],ctx.trials[ctx.cpt]["Trial"],ctx.trials[ctx.cpt]["VV"],ctx.trials[ctx.cpt]["OC"],ctx.visualSearchTime,ctx.errorCount]);
             ctx.errorCount = 0;
@@ -402,19 +400,61 @@ var displayPlaceholders = function() {
             if (ctx.participant != ctx.trials[ctx.cpt]["ParticipantID"]){
               console.log("Prev part: " + ctx.participant + " differs from Current part: " + ctx.trials[ctx.cpt]["ParticipantID"]);
             }
-            else{
+            else{              
               if (ctx.cpt != ctx.trials.length - 1){
                 nextTrial();
+              } else {
+                displayEnd();
               }
             }
           }
           else{
+            console.log("error");
             ctx.errorCount++;
             restartTrial();
           }
         }
       );
   }
+}
+
+var displayEnd = function() {
+  ctx.state = state.NONE;
+
+  d3.select("#placeholders").remove();
+
+  d3.select("#instr")
+    .append("div")
+    .attr("id","end")
+    .attr("class","container");
+
+  d3.select("#end")
+    .append("div")
+    .append("p")
+    .html("Thank you for participating the experiment. Please download the load file and send it back to Angela or Ainura.");
+
+  var emails = [
+    "Ainura Dalabayeva: <a href=\"mailto:ainura011194@gmail.com\">ainura011194@gmail.com</a>",
+    "Wan-Hsuan Chiang (Angela): <a href=\"mailto:wan-hsuan.chiang@universite-paris-saclay.fr\">wan-hsuan.chiang@universite-paris-saclay.fr</a>"
+  ];
+
+  var ol = d3.select("#end").append("div").append("ol");
+  for (var i = 0; i < emails.length; i++){
+    ol.append("li").html(emails[i]);
+  };
+
+  
+  d3.select("#end")
+    .append("div")
+    .attr("id","end-action")
+    .attr("class","action")
+    .attr("class","container");    
+  
+  d3.select("#end-action")
+    .append("button")
+    .attr("onclick","downloadLogs(event)")//add downloadLogs event
+    .html("Download Log File"); 
+
 }
 
 // restart the trial
@@ -512,6 +552,16 @@ function shuffle(array) {
     array[j] = x;
   }
   return array;
+}
+
+// add - for any numbers
+var convertSign = function(num){
+  return -Number(num);
+}
+
+// min (included), max (excluded)
+var getRandomInt = function(min,max){
+  return Math.floor(Math.random() * (max - min) ) + min;
 }
 
 /*********************************************/
