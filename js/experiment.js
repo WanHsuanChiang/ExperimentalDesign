@@ -299,25 +299,23 @@ var displayShapes = function() {
   }
   // VV = ParallelismDirection (Combination)
   else { 
+
     /*
-    var list = [
+    var listss = [
       [parallel,directionBase],
       [parallel,directionRotate],
       [nonParallel,directionBase],
       [nonParallel,directionRotate]
     ];
-    var test1 = list[0];
-    var test = list.indexOf([targetP,targetD]);
-    console.log("Index: "+test);
-    console.log(list);
     // remove target combination in the list
-    for(var j = 0; j < list.length; j++){
-      if( list[j] = [targetP,targetD]){
-        list.splice(j,1);
+    for(var n = 0; n < listss.length; n++){
+      if( listss[n] == [targetP,targetD]){
+        listss.splice(n,1);
       }
     }
-    console.log("after:"+list);
-    */    
+    console.log("after:"+listss);
+    */
+
     // allocate the rest of the object appearance
     let canAllocate = (objectCount-1)-2*3;
     let a1 = getRandomInt(0,canAllocate+1);
@@ -344,18 +342,7 @@ var displayShapes = function() {
         lists.push([nonParallel,directionBase,subCount[2]]);
       }
     }
-    // push inside the array
-    // for each combination
-    /*
-    for(var k = 0; k < list.length; k++){
-      // the combination and the subCount match in terms of the same index (order) in their own array
-      for(var i = 0; i < subCount[k]; i++){
-        objectsAppearance.push({
-          angle: list[k][0],
-          direction: list[k][1]
-        });
-      }
-    }*/
+
     for(var i = 0; i < lists.length; i++) {
       var list = lists[i];
       for(var j = 0; j < list.length; j++) {
