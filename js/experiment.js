@@ -5,6 +5,7 @@ var state = {
   INSTRUCTIONS: 1,
   SHAPES: 2,
   PLACEHOLDERS: 3,
+  INTERFERENCE: 4,
 };
 var test;
 var ctx = {
@@ -511,12 +512,12 @@ var displayEnd = function() {
 
 // restart the trial
 var restartTrial = function(){
-  if(ctx.state == state.SHAPES){
+  if(ctx.state == state.INTERFERENCE){
     d3.select("#shapes").remove();
-    displayShapes();
+    displayInstructions();
   } else if (ctx.state == state.PLACEHOLDERS){
     d3.select("#placeholders").remove();
-    displayShapes();
+    displayInstructions();
   } else {
     return;
   }  
@@ -542,11 +543,43 @@ var keyListener = function(event) {
 
 // the alert box will display while users moving cursor when shape displayed
 var mouseListener = function(event){
+    
   if(ctx.state == state.SHAPES){
-    ctx.state == state.NONE;
-    var alert = document.getElementById("alert"); 
+    ctx.state = state.INTERFERENCE;
+    var alert = document.getElementById("alert");
+    d3.select("#modal-content > p").remove();
+    d3.select("#modal-content")
+      .append("p")
+      .html("Do not move your cursor during each trial. This trial will restart after you close the this message.");
     alert.style.display = "flex";
   }
+}
+
+// Reference" https://stackoverflow.com/questions/667555/how-to-detect-idle-time-in-javascript-elegantly
+var idleTimeOut = function() {
+  var time;
+    window.onload = resetTimer;
+    // DOM Events
+    document.onmousemove = resetTimer;
+    document.onkeypress = resetTimer;
+
+    function alert() {      
+      if(ctx.state == state.SHAPES){
+        ctx.state = state.INTERFERENCE;
+        var alert = document.getElementById("alert");
+        d3.select("#modal-content > p").remove();
+        d3.select("#modal-content")
+          .append("p")
+          .html("Time out. The trial will restart after you close this messsage.");
+        alert.style.display = "flex";
+      }
+    }
+
+    function resetTimer() {
+        clearTimeout(time);
+        time = setTimeout(alert, 10000)
+        // 1000 milliseconds = 1 second
+    }  
 }
 
 // close alert box and restart the trial

@@ -166,7 +166,7 @@
   </head>
 
 
-  <body onload="createScene();displayStart();"  onkeydown="ignoreSpace(event);" onkeyup="keyListener(event);" onmousemove="mouseListener(event)">
+  <body onload="createScene();displayStart();idleTimeOut();"  onkeydown="ignoreSpace(event);" onkeyup="keyListener(event);" onmousemove="mouseListener(event)">
     <header>
       <form id="form">
 
@@ -193,9 +193,7 @@
       <div id="alert" class="modal container">
         <div>
           <div id="modal-close" onclick="closeModal(event)">&times;</div>
-          <div id="modal-content">
-            <p>Do not move your cursor during each trial. This trial will restart after you close the this message.</p>
-          </div>
+          <div id="modal-content"></div>
           <div id="modal-btn" class="container action"><button onclick="closeModal(event)">Restart Trial</button></div>
         </div>      
       </div>      
