@@ -17,6 +17,8 @@ var ctx = {
   startBlock: 0,
   startTrial: 0,
   cpt: 0,
+  targetP: 0,
+  targetD: 0,
 
   participantIndex:touchstone == 1 ? "Participant" : "ParticipantID",
   practiceIndex:"Practice",
@@ -33,8 +35,8 @@ var ctx = {
   // where one line is one trial
   loggedTrials:
     touchstone == 1 ?
-    [["Participant","Practice","Block","Trial","VV","OC","visualSearchTime","ErrorCount"]] :
-    [["DesignName","ParticipantID","TrialID","Block1","Trial","VV","OC","visualSearchTime","ErrorCount"]],
+    [["Participant","Practice","Block","Trial","VV","OC","visualSearchTime","ErrorCount","targetP","targetD"]] :
+    [["DesignName","ParticipantID","TrialID","Block1","Trial","VV","OC","visualSearchTime","ErrorCount","targetP","targetD"]],
   
   startTime: 0,
   endTime: 0,
@@ -235,7 +237,7 @@ var displayShapes = function() {
   var randomNumber2 = Math.random();
   
   var parallel = 0;
-  var nonParallel = 10;
+  var nonParallel = 30;
   //var directionBase = getRandomInt(0,360);
   var directionBase = 45;
   var directionRotate = directionBase + 90;
@@ -243,19 +245,20 @@ var displayShapes = function() {
   //Define the value
   var targetP, targetD; 
   if(randomNumber1 > 0.5) {
-    targetP = parallel; // target is parallel
-    console.log("targetP: " + targetP);
+    targetP = parallel; // target is parallel    
   } else {
     targetP = nonParallel; // target is not parallel
-    console.log("targetP: " + targetP);
   }
   if(randomNumber2 > 0.5) {
-    targetD = directionBase; // target direction
-    console.log("targetD: " + targetD);
+    targetD = directionBase; // target direction    
   } else {
     targetD = directionRotate; // target direction and rotate 45 degree more
-    console.log("targetD: " + targetD);
   }
+
+  console.log("targetP: " + targetP);
+  console.log("targetD: " + targetD);
+  ctx.targetP = targetP;
+  ctx.targetD = targetD;
 
   // 2. Set the visual appearance of all other objects now that the target appearance is decided
   // Here, we implement the case VV = "Size" so all other objects are large (resp. small) if target is small (resp. large) but have the same color as target.
@@ -384,7 +387,8 @@ var displayShapes = function() {
     .attr("y",gridCoords[i].y-adjust)
     .attr("width",lineWidth)
     .attr("height",lineHeight)
-    .attr("transform","rotate(" + convertSign(objectsAppearance[i].angel) + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
+    //.attr("transform","rotate(" + convertSign(objectsAppearance[i].angel) + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
+    .attr("transform","rotate(" + 0 + "," + gridCoords[i].x + "," + gridCoords[i].y + ")");
     groupObject.append("rect")
     .attr("class","right")
     .attr("x",gridCoords[i].x+lineMargin)
@@ -435,7 +439,7 @@ var displayPlaceholders = function() {
           if (this.getAttribute("target") == "true"){
             console.log("correct");
             ctx.visualSearchTime = ctx.endTime - ctx.startTime;
-            ctx.loggedTrials.push(["Preattention-experiment",ctx.trials[ctx.cpt]["ParticipantID"], ctx.trials[ctx.cpt]["TrialID"], ctx.trials[ctx.cpt]["Block1"],ctx.trials[ctx.cpt]["Trial"],ctx.trials[ctx.cpt]["VV"],ctx.trials[ctx.cpt]["OC"],ctx.visualSearchTime,ctx.errorCount]);
+            ctx.loggedTrials.push(["Preattention-experiment",ctx.trials[ctx.cpt]["ParticipantID"], ctx.trials[ctx.cpt]["TrialID"], ctx.trials[ctx.cpt]["Block1"],ctx.trials[ctx.cpt]["Trial"],ctx.trials[ctx.cpt]["VV"],ctx.trials[ctx.cpt]["OC"],ctx.visualSearchTime,ctx.errorCount,ctx.targetP,ctx.targetD]);
             ctx.errorCount = 0;
             d3.select("#placeholders").remove();
             if (ctx.participant != ctx.trials[ctx.cpt]["ParticipantID"]){
