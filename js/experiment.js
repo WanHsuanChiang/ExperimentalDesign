@@ -94,6 +94,9 @@ var startExperiment = function(event) {
   d3.select("#shapes").remove();
   d3.select("#placeholders").remove();
   d3.select("#count").remove();
+  ctx.loggedTrials = touchstone == 1 ?
+    [["Participant","Practice","Block","Trial","VV","OC","visualSearchTime","ErrorCount","targetP","targetD"]] :
+    [["DesignName","ParticipantID","TrialID","Block1","Trial","VV","OC","visualSearchTime","ErrorCount","targetP","targetD"]]
 
   // set the trial counter to the first trial to run
   // ctx.participant, ctx.startBlock and ctx.startTrial contain values selected in combo boxes
@@ -616,11 +619,13 @@ var downloadLogs = function(event) {
    console.log(rowArray);
   });
   var encodedUri = encodeURI(csvContent);
+  /*
   var downloadLink = d3.select("form")
   .append("a")
   .attr("href",encodedUri)
   .attr("download","logs_"+ctx.trials[ctx.cpt][ctx.participantIndex]+"_"+Date.now()+".csv")
   .text("logs_"+ctx.trials[ctx.cpt][ctx.participantIndex]+"_"+Date.now()+".csv");
+  */
 
   var end =  document.getElementById("end");
   if (typeof(end) != 'undefined' && end != null)
@@ -628,8 +633,8 @@ var downloadLogs = function(event) {
     d3.select("#end-action")
       .append("a")
       .attr("href",encodedUri)
-      .attr("download","logs_"+ctx.trials[ctx.cpt][ctx.participantIndex]+"_"+Date.now()+".csv")
-      .text("logs_"+ctx.trials[ctx.cpt][ctx.participantIndex]+"_"+Date.now()+".csv");
+      .attr("download","logs_"+ctx.participant+"_"+Date.now()+".csv")
+      .text("logs_"+ctx.participant+"_"+Date.now()+".csv");
   }
   
 }
@@ -708,6 +713,8 @@ var setBlock = function(blockID) {
   }
 
   var select = d3.select("#trialSel");
+  
+  select.selectAll("option").remove()
 
   select.selectAll("option")
     .data(options)
@@ -736,6 +743,7 @@ var setParticipant = function(participantID) {
   }
 
   var select = d3.select("#blockSel")
+  select.selectAll("option").remove()
   select.selectAll("option")
     .data(options)
     .enter()
