@@ -564,7 +564,7 @@ var idleTimeOut = function() {
 
     function resetTimer() {
         clearTimeout(time);
-        time = setTimeout(alert, 10000)
+        time = setTimeout(alert, 1000*60*10)
         // 1000 milliseconds = 1 second
     }  
 }
