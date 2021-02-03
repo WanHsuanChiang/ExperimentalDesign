@@ -130,7 +130,8 @@ var nextTrial = function() {
   if(ctx.trials[ctx.cpt]["ParticipantID"] !== ctx.participant) {
     displayEnd();
   } else {
-    displayInstructions();    
+    displayInstructions();
+    displayCounter();    
   }  
 }
 
@@ -521,13 +522,15 @@ var displayEnd = function() {
 
 // restart the trial
 var restartTrial = function(){
-  d3.select("#count").remove();
   if(ctx.state == state.INTERFERENCE){
     d3.select("#shapes").remove();
     displayInstructions();
+    displayCounter();
   } else if (ctx.state == state.PLACEHOLDERS){
     d3.select("#placeholders").remove();
     displayInstructions();
+    displayCounter();
+
   } else {
     return;
   }  
@@ -539,10 +542,11 @@ var keyListener = function(event) {
   if(event.code == "Space") {
     if(ctx.state == state.INSTRUCTIONS){
       d3.select("#instructions").remove();
-      displayCounter();
+      d3.select("#count").remove();
       displayShapes();
     } else if (ctx.state == state.SHAPES){
       d3.select("#shapes").remove();
+      d3.select("#count").remove();
       displayPlaceholders();
     } else {
       return;
@@ -713,7 +717,7 @@ var setBlock = function(blockID) {
   }
 
   var select = d3.select("#trialSel");
-  
+
   select.selectAll("option").remove()
 
   select.selectAll("option")
