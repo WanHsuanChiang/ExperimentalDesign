@@ -91,6 +91,7 @@ var startExperiment = function(event) {
   d3.select("#instructions").remove();
   d3.select("#shapes").remove();
   d3.select("#placeholders").remove();
+  d3.select("#count").remove();
 
   // set the trial counter to the first trial to run
   // ctx.participant, ctx.startBlock and ctx.startTrial contain values selected in combo boxes
@@ -206,6 +207,19 @@ var displayInstructions = function() {
   d3.select("#instructions")
     .append("p")
     .html("Press <span class=\"key\">Space</span> key when ready to start.");
+
+}
+
+var displayCounter = function() {
+
+  d3.select("#counter")
+    .append("div")
+    .attr("id", "count")
+    .attr("class", "counter")
+
+  d3.select("#count")
+    .append("p")
+    .html("Experiment  " + ctx.trials[ctx.cpt]["TrialID"] + "/" + ctx.trials.filter(trial => trial.ParticipantID == ctx.participant ).length);
 
 }
 
@@ -432,6 +446,7 @@ var displayPlaceholders = function() {
           // TODO
           // ADDED step 1-b
           ctx.endTime = Date.now();
+          d3.select("#count").remove();
           if (this.getAttribute("target") == "true"){
             console.log("correct");
             ctx.visualSearchTime = ctx.endTime - ctx.startTime;
@@ -472,7 +487,7 @@ var displayEnd = function() {
   d3.select("#end")
     .append("div")
     .append("p")
-    .html("Thank you for participating the experiment. Please download the load file and send it back to Angela or Ainura.");
+    .html("Thank you for participating the experiment. Please download the log file and send it back to Angela or Ainura.");
 
   var emails = [
     "Ainura Dalabayeva: <a href=\"mailto:ainura011194@gmail.com\">ainura011194@gmail.com</a>",
@@ -499,6 +514,7 @@ var displayEnd = function() {
 
 // restart the trial
 var restartTrial = function(){
+  d3.select("#count").remove();
   if(ctx.state == state.INTERFERENCE){
     d3.select("#shapes").remove();
     displayInstructions();
@@ -516,6 +532,7 @@ var keyListener = function(event) {
   if(event.code == "Space") {
     if(ctx.state == state.INSTRUCTIONS){
       d3.select("#instructions").remove();
+      displayCounter();
       displayShapes();
     } else if (ctx.state == state.SHAPES){
       d3.select("#shapes").remove();

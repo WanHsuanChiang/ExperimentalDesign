@@ -66,6 +66,11 @@
           word-wrap: normal;
         }
 
+        .counter {
+          text-align: center;
+          font-size:150%;
+        }
+
         #scene {
           height: inherit;
           display: flex;
@@ -181,13 +186,14 @@
 
         <button onclick="startExperiment(event)" onkeydown="ignore(event);" onkeyup="ignore(event);">GO</button>
 
-        <button onclick="downloadLogs(event)" onkeydown="ignore(event)" onkeyup="ignore(event)">Download log file</button>
+        <!--<button onclick="downloadLogs(event)" onkeydown="ignore(event)" onkeyup="ignore(event)">Download log file</button>-->
 
       </form>
     </header>
     <section>
       <div id="main">
         <div id="instr"></div>
+        <div id="counter"></div>
         <div id="scene"></div>
       </div>      
       <div id="alert" class="modal container">
